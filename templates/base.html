@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Joe Dev Academy{% endblock %}</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== GLOBAL ===== */
+body {
+    font-family: 'Roboto', sans-serif;
+    background:#f5f5f5;
+    color:#111;
+    margin:0;
+}
+
+a { text-decoration:none; }
+
+/* ===== NAVBAR ===== */
+nav {
+    background:#000000;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 2px 10px rgba(255,255,255,0.1);
+    position: relative;
+    z-index: 1000;
+}
+
+.logo {
+    font-size:1.5rem;
+    font-weight:bold;
+    color:#ffffff;
+    display: inline-block;
+    animation: logoMove 5s infinite;
+    transition: color 0.5s;
+}
+
+.nav-links {
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.nav-links a {
+    color:#ffffff;
+    font-weight:500;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition:0.2s;
+}
+
+.nav-links a:hover {
+    background:#ff6c17;
+    color:#fff;
+}
+
+/* Toggle button mode sombre / clair */
+.dark-toggle {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: #ffffff;
+    color: #ff650c;
+    font-weight: 700;
+    margin-left: 10px;
+    transition: 0.3s;
+}
+
+body.dark .dark-toggle {
+    background: #ff7d03;
+    color: #111;
+}
+
+/* ===== DROPDOWN ===== */
+.dropdown {
+    position:relative;
+    cursor:pointer;
+}
+
+.dropdown-toggle {
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:8px 12px;
+    border-radius:5px;
+    transition:0.2s;
+    color: #ffffff;
+}
+
+.dropdown-toggle:hover {
+    background:#ff810b;
+    color:white;
+}
+
+.dropdown-menu {
+    position:absolute;
+    top:100%;
+    right:0;
+    background:#ffffff;
+    padding:10px 0;
+    border-radius:10px;
+    display:none;
+    min-width:180px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.15);
+    z-index:1000;
+}
+
+.dropdown-menu a {
+    display:block;
+    padding:10px 20px;
+    color:#111;
+    font-weight:500;
+    transition:0.2s;
+}
+
+.dropdown-menu a:hover {
+    background:#e67b00;
+    color:rgb(255, 255, 255);
+}
+
+/* ===== BUTTON ===== */
+.btn {
+    padding:8px 18px;
+    border-radius:25px;
+    background:#ffa807;
+    color:#ffffff;
+    font-weight:bold;
+    transition:0.2s;
+}
+
+.btn:hover {
+    background:#ff8513;
+}
+
+/* ===== MOBILE ===== */
+.menu-toggle {
+    display:none;
+    font-size:24px;
+    cursor:pointer;
+    color:#fff;
+}
+
+@media(max-width:768px){
+    .nav-links {
+        display:none;
+        flex-direction:column;
+        background:#000; /* contraste avec texte blanc */
+        position:absolute;
+        top:70px;
+        right:0;
+        width:220px;
+        padding:20px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.3);
+        border-radius:10px;
+        z-index:1500;
+    }
+
+    .nav-links.active {
+        display:flex;
+    }
+
+    .nav-links a {
+        color:#fff;
+        padding:12px 15px;
+        margin:5px 0;
+    }
+
+    .dropdown-menu {
+        position:relative;
+        top:0;
+        right:0;
+        background:#fc940b; /* foncé pour mobile */
+    }
+
+    .dropdown-menu a {
+        color:#fff;
+        padding:10px 15px;
+    }
+
+    .menu-toggle {
+        display:block;
+    }
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width:1200px;
+    margin:auto;
+    padding:40px 20px;
+}
+
+/* ===== BOUTON WHATSAPP FLOTTANT ===== */
+.whatsapp-float {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    bottom: 25px;
+    right: 25px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 22px;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.whatsapp-float img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    padding: 6px;
+    transition: 0.3s;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 25px #ffac11;
+}
+
+/* ===== ANIMATION LOGO ===== */
+@keyframes logoMove {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(5px); }
+    50% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* ===== MODE CLAIR / SOMBRE ===== */
+body.light {
+    background: #f5f5f5;
+    color: #111;
+}
+
+body.dark {
+    background: #111;
+    color: #cccbcb;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav>
+    <a href="{% url 'home' %}" class="logo">⭐🎓JDC ACADEMY🎓⭐</a>
+
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
+    <div class="nav-links" id="menu">
+        <div class="dark-toggle" onclick="toggleDarkMode()">🌙</div>
+
+
+        <a href="{% url 'notifications' %}" class="notif-link">
+           🔔 <span id="notif-count" class="notif-badge">0</span>
+        </a>
+
+        <a href="{% url 'home' %}">Accueil</a>
+
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'plans' %}" class="btn">💎 S'abonner</a>
+
+            <div class="dropdown" id="userDropdown">
+                <div class="dropdown-toggle">👤 {{ request.user.username }}</div>
+                <div class="dropdown-menu">
+
+                    {% if request.user.is_superuser %}
+                        <a href="{% url 'admin:index' %}">Admin Panel</a>
+                    {% endif %}
+
+                    {% if request.user.is_finance_admin %}
+                        <a href="{% url 'finance_dashboard' %}">Admin Financier</a>
+                    {% endif %}
+
+                    {% if request.user.is_instructor %}
+                        <a href="{% url 'instructor_dashboard' %}">Créer un cours</a>
+                    {% endif %}
+
+                    {% if request.user.is_student %}
+                        <a href="{% url 'student_dashboard' %}">Mon compte</a>
+                    {% endif %}
+
+                    <a href="{% url 'plans' %}">Abonnement</a>
+                    <a href="{% url 'logout' %}">Déconnexion</a>
+
+                </div>
+            </div>
+
+        {% else %}
+            <a href="{% url 'login' %}">Connexion</a>
+            <a href="{% url 'register' %}" class="btn">Inscription</a>
+        {% endif %}
+    </div>
+</nav>
+
+{% if request.user.is_authenticated %}
+    {% if request.user.is_student %}
+        {% with request.user.subscription_set.first as user_subscription %}
+            {% if user_subscription and user_subscription.is_valid %}
+                {% with "Bonjour, mon abonnement est actif mais j'ai besoin d'aide pour débloquer un cours." as whatsapp_message %}
+                    <a href="https://wa.me/243816172056?text={{ whatsapp_message|urlencode }}" 
+                       class="whatsapp-float" target="_blank">
+                        <img src="{% static 'img/whatsapp-icon.png' %}" alt="WhatsApp" />
+                    </a>
+                {% endwith %}
+            {% else %}
+                {% with "Bonjour, je souhaite m'abonner et j'ai besoin d'aide pour utiliser la plateforme." as whatsapp_message %}
+                    <a href="https://wa.me/243816172056?text={{ whatsapp_message|urlencode }}" 
+                       class="whatsapp-float" target="_blank">
+                        <img src="{% static 'img/whatsapp-icon.png' %}" alt="WhatsApp" />
+                    </a>
+                {% endwith %}
+            {% endif %}
+        {% endwith %}
+    {% elif request.user.is_instructor %}
+        {% with "Bonjour, je suis formateur et j'ai besoin d'aide pour mes cours." as whatsapp_message %}
+            <a href="https://wa.me/243816172056?text={{ whatsapp_message|urlencode }}" 
+               class="whatsapp-float" target="_blank">
+                <img src="{% static 'img/whatsapp-icon.png' %}" alt="WhatsApp" />
+            </a>
+        {% endwith %}
+    {% elif request.user.is_superuser %}
+        {% with "Bonjour, je suis admin et j'ai besoin d'assistance." as whatsapp_message %}
+            <a href="https://wa.me/243816172056?text={{ whatsapp_message|urlencode }}" 
+               class="whatsapp-float" target="_blank">
+                <img src="{% static 'img/whatsapp-icon.png' %}" alt="📞" />
+            </a>
+        {% endwith %}
+    {% endif %}
+{% endif %}
+
+<!-- ===== CONTENT ===== -->
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<!-- ===== FOOTER PRO ===== -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <!-- COLONNE 1 -->
+    <div class="footer-col">
+      <h3>⭐🎓JDC academy</h3>
+      <p>
+        JoeDev Academy est une plateforme e-learning conçue pour transformer la manière dont les étudiants apprennent.
+        Nous offrons des cours professionnels dans plusieurs domaines afin d’aider chaque utilisateur à développer ses compétences et améliorer sa carrière dans un monde numérique en constante évolution.
+      </p>
+    </div>
+
+    <!-- COLONNE 2 -->
+    <div class="footer-col">
+      <h3>À propos</h3>
+      <p>⭐🎓JDC Academy est une plateforme de formation en ligne spécialisée dans le développement web, la programmation et les technologies modernes.</p>
+      <p>Nous aidons les étudiants à apprendre des compétences pratiques pour réussir dans le monde numérique.</p>
+      <p>Notre objectif est de rendre l’apprentissage accessible à tous, partout dans le monde.</p>
+    </div>
+
+    <!-- COLONNE 3 -->
+    <div class="footer-col">
+      <h3>Notre mission</h3>
+      <p>Notre mission est de rendre l’éducation accessible à tous, en fournissant des contenus de qualité, créés par des experts, dans un environnement simple et moderne.</p>
+    </div>
+
+    <!-- COLONNE 4 (Photos + QR) -->
+    <div class="footer-col footer-photos">
+      <h3>Qui suis-je ?</h3>
+      <div class="photo-container">
+
+        <!-- PHOTO -->
+        <div class="photo-item">
+          <img src="{% static 'image/joe-photo.jpeg' %}" alt="Photo de Joe" />
+          <p>Joe Dev Codes</p>
+        </div>
+
+        <!-- QR SITE -->
+        <div class="photo-item qr-glow">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ qr_site|urlencode }}">
+          <p>Site Web</p>
+        </div>
+
+        <!-- QR WHATSAPP -->
+        <div class="photo-item qr-glow">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ qr_whatsapp|urlencode }}">
+          <p>WhatsApp</p>
+        </div>
+
+        <!-- QR TIKTOK -->
+        <div class="photo-item qr-glow">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ qr_tiktok|urlencode }}">
+          <p>TikTok</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- COLONNE 5 (Réseaux) -->
+    <div class="footer-col">
+      <h3>Réseaux</h3>
+      <div class="socials">
+        <a href="https://www.facebook.com/tonprofil" target="_blank" rel="noopener">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/facebook.svg" class="social-icon"/> Facebook
+        </a><br/>
+        <a href="https://www.tiktok.com/@tonprofil" target="_blank" rel="noopener">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/tiktok.svg" class="social-icon"/> TikTok
+        </a><br/>
+        <a href="https://wa.me/243816172056" target="_blank" rel="noopener">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" class="social-icon"/> WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- COLONNE 6 (Politique & Confidentialité) -->
+    <div class="footer-col">
+      <h3>Politique & Confidentialité</h3>
+      <div class="footer-links">
+        <a href="{% url 'privacy' %}">Politique de confidentialité</a><br/>
+        <a href="{% url 'terms' %}">Conditions d’utilisation</a><br/>
+        <a href="{% url 'cookies' %}">Cookies & données</a><br/>
+        <a href="{% url 'mentions' %}">Mentions légales</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BAS DU FOOTER -->
+  <div class="footer-bottom">
+    <p>
+      © 2026 Joe Dev Academy |
+      <a href="{% url 'contact' %}">Contact</a> |
+      <a href="{% url 'help' %}">Aide</a>
+      <a href="{% url 'plans' %}" class="btn-footer">S'abonner</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+.footer {
+  background-color: #222;
+  color: #ddd;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.footer-col {
+  flex: 1 1 200px;
+  min-width: 220px;
+}
+
+.footer-col h3 {
+  color: #ff8902;
+  margin-bottom: 15px;
+}
+
+.footer-col p, .footer-links a {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  color: #ddd;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #ff9900;
+  text-decoration: underline;
+}
+
+.socials a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.socials a:hover {
+  color: #ff9901;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Photos */
+.footer-photos .photo-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  position: relative; /* <-- ajouté pour QR glow */
+  z-index: 0;          /* <-- assure que glow s'affiche derrière */
+}
+
+.footer-photos .photo-item {
+  text-align: center;
+  position: relative; /* <-- nécessaire pour qr-glow */
+  z-index: 1;
+}
+
+.footer-photos img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ff8800;
+  transition: 0.3s;
+}
+
+.footer-photos img:hover {
+  transform: scale(1.1);
+}
+
+.footer-photos p {
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+/* Bas */
+.footer-bottom {
+  border-top: 1px solid #444;
+  margin-top: 40px;
+  padding-top: 15px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.footer-bottom a {
+  color: #ffae00;
+  text-decoration: none;
+  margin: 0 8px;
+}
+
+.btn-footer {
+  background-color: #f8ab05;
+  color: white !important;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* === QR GLOW EFFECT === */
+.qr-glow {
+  position: relative;
+  border-radius: 50%;
+  padding: 5px;
+  transition: 0.4s;
+  z-index: 1; /* <-- important */
+}
+
+/* glow animé */
+.qr-glow::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ffae00, #ffae00, #ffc400);
+  background-size: 300% 300%;
+  z-index: -1;
+  filter: blur(10px);
+  opacity: 0;
+  transition: 0.4s;
+  animation: glowMove 4s linear infinite;
+}
+
+/* hover activation */
+.qr-glow:hover::before {
+  opacity: 1;
+}
+
+/* animation */
+@keyframes glowMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* effet zoom */
+.qr-glow:hover {
+  transform: scale(1.15);
+}
+
+/* effet sur image */
+.qr-glow img {
+  transition: 0.3s;
+}
+
+.qr-glow:hover img {
+  box-shadow: 0 0 20px #ffc508;
+}
+
+
+/* RESPONSIVE amélioré */
+@media (max-width: 1024px) {
+    .container {
+        padding: 30px 15px;
+    }
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+    .benefits {
+        gap: 10px;
+    }
+    .courses {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .courses, .benefits, .stats-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 90%;   /* passe la carte à 90% de la largeur du container */
+        max-width: 350px;
+    }
+
+    .btn, .btn-secondary {
+        width: 100%;
+        padding: 14px 0;
+        font-size: 1.1rem;
+        border-radius: 30px;
+        margin: 8px 0;
+        display: block;
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 35px;
+    }
+
+    .platform-info {
+        max-width: 95%;
+        padding: 15px;
+    }
+
+    .video-wrapper {
+        max-width: 100%;
+    }
+
+    .faq {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+}
+
+
+
+
+.notif-link {
+    position: relative;
+}
+
+.notif-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 50%;
+}
+
+</style>
+
+<!-- ===== JS ===== -->
+<script>
+    // Mobile menu toggle
+    function toggleMenu(){
+        document.getElementById("menu").classList.toggle("active");
+    }
+
+    // Dropdown toggle
+    document.addEventListener('DOMContentLoaded', () => {
+        const dropdown = document.getElementById('userDropdown');
+        if(dropdown){
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
+
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', () => {
+                menu.style.display = 'none';
+            });
+        }
+    });
+
+    // ===== MODE CLAIR / SOMBRE =====
+    document.addEventListener('DOMContentLoaded', () => {
+        if(localStorage.getItem('darkMode') === 'enabled'){
+            document.body.classList.add('dark');
+            document.querySelector('.dark-toggle').textContent = '☀️';
+        } else {
+            document.body.classList.add('light');
+        }
+    });
+
+    function toggleDarkMode(){
+        const body = document.body;
+        const btn = document.querySelector('.dark-toggle');
+
+        if(body.classList.contains('dark')){
+            body.classList.remove('dark');
+            body.classList.add('light');
+            btn.textContent = '🌙';
+            localStorage.setItem('darkMode', 'disabled');
+        } else {
+            body.classList.remove('light');
+            body.classList.add('dark');
+            btn.textContent = '☀️';
+            localStorage.setItem('darkMode', 'enabled');
+        }
+    }
+
+    // ===== LOGO CHANGE DE COULEUR TOUTES LES 5 SECONDES =====
+    const logo = document.querySelector('.logo');
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#00ffff', '#ffff00'];
+    let colorIndex = 0;
+
+    setInterval(() => {
+        if(logo){
+            logo.style.color = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+        }
+    }, 5000);
+
+
+
+
+    
+const socket = new WebSocket("ws://" + window.location.host + "/ws/notifications/");
+
+socket.onmessage = function(e){
+    const data = JSON.parse(e.data);
+
+    // 🔔 afficher popup
+    alert(data.message);
+
+    updateNotifCount();
+};
+
+// 🔴 badge
+function updateNotifCount(){
+    fetch("/notifications/unread-count/")
+    .then(res => res.json())
+    .then(data => {
+        const badge = document.getElementById("notif-count");
+
+        if(data.count > 0){
+            badge.innerText = data.count;
+            badge.style.display = "inline-block";
+        } else {
+            badge.style.display = "none";
+        }
+    });
+}
+
+
+setInterval(updateNotifCount, 5000);
+updateNotifCount();
+
+//  push navigateur
+function showPush(message){
+    if(Notification.permission === "granted"){
+        new Notification("Joe Dev Academy", {
+            body: message
+        });
+    }
+}
+
+if("Notification" in window){
+    Notification.requestPermission();
+}
+
+
+document.querySelector(".notif-link").addEventListener("click", function(){
+    fetch("/notifications/mark-as-read/")
+    .then(() => updateNotifCount());
+});
+
+
+</script>
+
+</body>
+</html>

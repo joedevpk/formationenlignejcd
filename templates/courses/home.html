@@ -1,0 +1,611 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Apprends des compétences utiles et monétisables</h1>
+        <p class="subtitle">
+            Accède à des formations pratiques en développement web, programmation et business digital.
+            Progresse à ton rythme et transforme tes compétences en opportunités professionnelles.
+        </p>
+        <div class="actions">
+            <a href="/subscriptions/plans/" class="btn">💎 S’abonner</a>
+            <a href="#courses" class="btn-secondary">Voir les cours</a>
+        </div>
+    </section>
+    
+
+<!--  Section Affiliation Améliorée -->
+<section class="affiliate-home-pro">
+    <div class="affiliate-container">
+        <h2> ⭐Deviens affilié et transforme tes compétences en revenu⭐</h2>
+
+        <!-- Introduction avec icône -->
+        <div class="affiliate-step">
+            <div class="icon">⭐🌟</div>
+            <div class="content">
+                <p>
+                    L'affiliation est un moyen simple et efficace de générer des revenus passifs en partageant nos cours avec ton réseau.
+                    Chaque fois qu'une personne s'inscrit grâce à ton lien, tu gagnes une commission directement sur ton compte.
+                </p>
+                <p>
+                    Que tu sois étudiant, développeur, entrepreneur ou passionné par le numérique,
+                    l'affiliation te permet de monétiser tes recommandations tout en aidant d'autres personnes à se former.
+                </p>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Fonctionnement -->
+        <h3>🛠 Comment ça fonctionne ?</h3>
+        <div class="affiliate-step">
+            <div class="icon">1️⃣</div>
+            <div class="content">
+                <p>Inscris-toi et active ton compte affilié sur notre plateforme.</p>
+            </div>
+        </div>
+        <div class="affiliate-step">
+            <div class="icon">2️⃣</div>
+            <div class="content">
+                <p>Partage ton lien unique avec tes amis, sur les réseaux sociaux ou via ton site web.</p>
+            </div>
+        </div>
+        <div class="affiliate-step">
+            <div class="icon">3️⃣</div>
+            <div class="content">
+                <p>Chaque nouvel utilisateur qui s’inscrit via ton lien te rapporte une commission.</p>
+            </div>
+        </div>
+        <p>
+            Nos commissions sont transparentes et versées automatiquement dans ton compte affilié. Plus tu partages, plus tu gagnes !
+        </p>
+
+        <hr>
+
+        <!-- Conseils pour maximiser les gains -->
+        <h3> Conseils pour maximiser tes gains</h3>
+        <div class="affiliate-step">
+            <div class="icon">1️⃣</div>
+            <div class="content">
+                <p>Publie ton lien sur tes réseaux sociaux ou blog pour toucher un public plus large.</p>
+            </div>
+        </div>
+        <div class="affiliate-step">
+            <div class="icon">2️⃣</div>
+            <div class="content">
+                <p>Crée des tutoriels ou recommandations de cours pour attirer des inscrits qualifiés.</p>
+            </div>
+        </div>
+        <div class="affiliate-step">
+            <div class="icon">3️⃣</div>
+            <div class="content">
+                <p>Suis tes performances sur ton dashboard affilié pour ajuster ta stratégie.</p>
+            </div>
+        </div>
+        <p>
+            L’affiliation n’est pas seulement un moyen de gagner de l’argent, c’est aussi une façon de partager de la valeur et de construire ta crédibilité en ligne.
+        </p>
+
+        <!-- Call to action -->
+        <div class="affiliate-cta">
+            <a href="{% url 'affiliate_dashboard' %}" class="btn-dashboard">Commencer l'affiliation</a>
+        </div>
+    </div>
+</section>
+
+
+    <!-- BENEFITS -->
+    <section class="benefits-section">
+        <h2>Avantages de notre plateforme</h2>
+        <div class="benefits">
+            <div class="benefit-item">✔ Accès illimité aux cours</div>
+            <div class="benefit-item">✔ Contenu premium et actualisé régulièrement</div>
+            <div class="benefit-item">✔ Exercices et projets pratiques</div>
+            <div class="benefit-item">✔ Support WhatsApp en direct</div>
+            <div class="benefit-item">✔ Apprentissage à ton rythme</div>
+        </div>
+    </section>
+
+    <!-- PLATEFORME & PRÉSENTIEL -->
+    <section class="platform-section">
+        <h2>Notre plateforme et les cours en présentiel</h2>
+        <div class="platform-info interactive-box">
+            <p>
+                Tous nos cours sont accessibles en ligne via notre plateforme moderne et intuitive.
+                Tu peux apprendre depuis chez toi ou sur ton appareil mobile, avec des vidéos, exercices et projets interactifs.
+            </p>
+            <p>
+                Nous offrons également la possibilité de suivre les cours en présentiel dans nos locaux. 
+                Cela te permet de bénéficier d’un accompagnement direct et de pratiquer avec des formateurs experts.
+            </p>
+            <p>
+                Plateforme compatible avec les outils les plus utilisés : éditeurs de code, environnements Python/Django, gestion de projet et ressources digitales.
+            </p>
+        </div>
+    </section>
+
+    <!-- VIDEO PREVIEW -->
+    <section class="video-section">
+        <h2>Aperçu vidéo de nos cours</h2>
+        <div class="video-wrapper interactive-box">
+            <video id="course-video" poster="/static/images/video-poster.jpg">
+                <source src="/static/videos/course-preview.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
+            <div class="play-overlay">
+                <span>▶</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- COURSES -->
+    <section id="courses">
+        <h2>Cours disponibles</h2>
+        <div class="courses">
+            {% for course in courses %}
+            <div class="card interactive-box">
+                {% if course.is_popular %}
+                    <div class="badge">Populaire</div>
+                {% elif course.is_new %}
+                    <div class="badge">Nouveau</div>
+                {% endif %}
+
+                {% if course.image %}
+                    <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image" />
+                {% else %}
+                    <img src="/static/images/default-course.png" alt="Image par défaut" class="course-image" />
+                {% endif %}
+
+                <h3>{{ course.title }}</h3>
+                <p class="price">{{ course.price }} $</p>
+                <p class="desc">{{ course.description|truncatewords:20 }}</p>
+                <a href="{% url 'course_detail' course.id %}" class="btn">Voir le cours</a>
+            </div>
+            {% empty %}
+            <p>Aucun cours disponible.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="statistics">
+        <h2>Chiffres clés</h2>
+        <div class="stats-container">
+            <div class="stat-item interactive-box">
+                <h3>+50</h3>
+                <p>Cours disponibles</p>
+            </div>
+            <div class="stat-item interactive-box">
+                <h3>+2000</h3>
+                <p>Étudiants inscrits</p>
+            </div>
+            <div class="stat-item interactive-box">
+                <h3>+95%</h3>
+                <p>Taux de satisfaction</p>
+            </div>
+        </div>
+    </section>
+    <!-- REVIEWS HOME -->
+<section class="reviews-home">
+    <h2>Avis de nos étudiants ⭐</h2>
+    <div class="reviews-container">
+        {% for review in reviews %}
+        <div class="review-card interactive-box">
+            <div class="review-header">
+                <strong>{{ review.user.username }}</strong>
+                <div class="stars">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %} ★ {% else %} ☆ {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <p>{{ review.comment|truncatewords:25 }}</p>
+            <button type="button" class="btn-like" onclick="likeReview({{ review.id }})">
+                👍 <span id="likes-{{ review.id }}">{{ review.likes.count|default:0 }}</span>
+            </button>
+        </div>
+        {% empty %}
+        <p>Aucun avis disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+
+    <!-- WHY CHOOSE US -->
+    <section class="info">
+        <h2>Pourquoi choisir Joe Dev Academy ?</h2>
+        <p>Notre plateforme simplifie l’apprentissage du développement web et des compétences numériques avec des contenus pratiques et directement applicables.</p>
+        <p>Grâce à l’abonnement, tu accèdes à tous les cours disponibles, sans limitation. Tu peux apprendre à ton rythme et revenir sur les leçons quand tu le souhaites.</p>
+        <p>Nous couvrons des domaines variés : développement web, Python, Django, business digital, création de projets professionnels et bien plus.</p>
+        <p>Notre objectif : te donner toutes les clés pour évoluer, réussir et créer des opportunités dans le monde numérique.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq">
+        <h2>Questions fréquentes</h2>
+        <div class="faq-item interactive-box">
+            <p><strong>Q : Que contient l’abonnement ?</strong></p>
+            <p>R : L’abonnement te donne accès à tous les cours, ressources et projets pratiques disponibles sur la plateforme.</p>
+        </div>
+        <div class="faq-item interactive-box">
+            <p><strong>Q : Puis-je suivre les cours à mon rythme ?</strong></p>
+            <p>R : Oui, tu peux suivre les cours à tout moment et revenir sur les leçons autant de fois que nécessaire.</p>
+        </div>
+        <div class="faq-item interactive-box">
+            <p><strong>Q : Les cours conviennent-ils aux débutants ?</strong></p>
+            <p>R : Oui, tous nos cours sont conçus pour que même les débutants puissent apprendre et progresser facilement.</p>
+        </div>
+        <div class="faq-item interactive-box">
+            <p><strong>Q : Quels moyens de paiement sont acceptés ?</strong></p>
+            <p>R : Nous acceptons Mobile Money et d’autres moyens sécurisés pour que le paiement soit simple et rapide.</p>
+        </div>
+        <div class="faq-item interactive-box">
+            <p><strong>Q : Les cours sont-ils mis à jour régulièrement ?</strong></p>
+            <p>R : Oui, tous les cours sont mis à jour pour rester en phase avec les technologies et les besoins du marché.</p>
+        </div>
+    </section>
+
+
+<div class="home-quiz-section">
+    <h2> Quiz du jour ! 🎉</h2>
+
+    <div class="home-quiz-badge">
+        🏆 Top Score : {{ top_quiz_score|default:"Aucun score pour l'instant" }}
+    </div>
+
+    <div class="home-quiz-paragraph">
+        <p> Testez vos connaissances et débloquez des badges exclusifs !</p>
+    </div>
+
+    <div class="home-quiz-paragraph">
+        <p> Mesurez votre progression et comparez-vous aux meilleurs élèves !</p>
+    </div>
+
+    {% if popular_quiz %}
+        <a href="{% url 'quiz_detail' popular_quiz.id %}" class="btn-home-quiz"></a>
+             Passer le quiz maintenant !
+        </a>
+    {% else %}
+        <p>Aucun quiz disponible pour le moment.</p>
+    {% endif %}
+</div>
+
+    <!-- CTA -->
+    <section class="cta">
+        <p>Rejoins dès aujourd’hui et commence à développer tes compétences pour ton futur professionnel.</p>
+        <a href="/subscriptions/plans/" class="btn">S’abonner maintenant</a>
+    </section>
+
+</div>
+
+
+<style>
+/* ===== GLOBAL ===== */
+body { background: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
+.container { max-width: 1100px; margin: auto; padding: 40px 20px; text-align: center; }
+
+/* HERO */
+.hero h1 { font-size: 2.8rem; margin-bottom: 15px; color:#111; }
+.hero .subtitle { color: #555; margin-bottom: 25px; font-size:1.1rem; }
+.actions { margin-bottom: 40px; }
+.btn { display:inline-block; padding:12px 25px; background:#ff8903; color:#fff; border-radius:25px; text-decoration:none; font-weight:bold; transition:0.3s; }
+.btn:hover { transform:scale(1.05); }
+.btn-secondary { display:inline-block; margin-left:10px; background:#eee; padding:12px 25px; border-radius:25px; text-decoration:none; color:#111; }
+
+/* BENEFITS */
+.benefits-section h2 { margin-bottom:20px; font-size:2rem; }
+.benefits { display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin-bottom:50px; }
+.benefit-item { background:#f0f0f0; padding:12px 20px; border-radius:15px; font-size:1rem; transition:0.3s; }
+.benefit-item:hover { transform:scale(1.05); box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+
+/* PLATFORM & PRESENTIEL */
+.platform-section { margin-bottom:50px; }
+.platform-section h2 { font-size:2rem; margin-bottom:20px; }
+.platform-info { border:2px solid #ffa600; padding:20px; border-radius:15px; text-align:left; max-width:800px; margin:auto; background:#f9f9f9; transition:0.3s; }
+.platform-info:hover { transform:scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.1); }
+
+/* VIDEO */
+.video-wrapper { position: relative; max-width:800px; margin:auto; border:2px solid #ffae01; border-radius:15px; overflow:hidden; transition:0.3s; background:#f9f9f9; }
+.video-wrapper:hover { transform:scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.15); }
+
+.video-wrapper video { width:100%; display:block; border-radius:0; }
+
+.play-overlay {
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    font-size:3rem;
+    color:rgba(255,255,255,0.9);
+    pointer-events:none;
+    transition:0.3s;
+    text-shadow: 0 0 15px rgba(0,0,0,0.7);
+}
+
+.video-wrapper:hover .play-overlay { transform:translate(-50%, -50%) scale(1.2); color:#28a745; }
+
+/* COURSES */
+.courses { display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:50px; }
+.card { border:2px solid #ffc400; padding:20px; border-radius:15px; width:260px; position:relative; background:#f9f9f9; transition:0.3s; }
+.card:hover { transform:translateY(-8px) scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.15); }
+.badge { position:absolute; top:-10px; right:-10px; background:#ffa600; color:white; padding:5px 10px; border-radius:10px; font-size:12px; }
+.price { color:#ff9900; font-weight:bold; }
+.desc { color:#555; font-size:14px; }
+.course-image {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+    margin-bottom: 10px;
+}
+
+/* STATISTICS */
+.statistics { margin:60px 0; text-align:center; }
+.stats-container { display:flex; justify-content:center; gap:30px; flex-wrap:wrap; }
+.stat-item { border:2px solid #ff9900; padding:20px; border-radius:15px; background:#f9f9f9; transition:0.3s; }
+.stat-item:hover { transform:scale(1.05); box-shadow:0 10px 20px rgba(0,0,0,0.1); }
+.stat-item h3 { font-size:2rem; color:#ff9306; margin-bottom:5px; }
+.stat-item p { font-size:1rem; color:#555; }
+
+/* INFO */
+.info { margin-top:60px; text-align:center; }
+.info p { max-width:700px; margin:10px auto; color:#555; font-size:1rem; }
+
+/* FAQ */
+.faq { margin:60px 0; text-align:left; max-width:800px; margin:auto; }
+.faq h2 { margin-bottom:20px; font-size:2rem; }
+.faq-item { border:2px solid #ffae00; padding:15px; border-radius:15px; margin-bottom:15px; background:#f9f9f9; transition:0.3s; }
+.faq-item:hover { transform:scale(1.03); box-shadow:0 10px 20px rgba(0,0,0,0.1); }
+.faq-item p { margin:5px 0; }
+
+/* CTA */
+.cta { margin-top:50px; }
+.cta p { font-size:1.2rem; margin-bottom:15px; }
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .courses, .benefits { flex-direction:column; align-items:center; }
+    .stats-container { flex-direction:column; align-items:center; }
+}
+
+
+/* REVIEWS HOME */
+.reviews-home { margin:60px 0; text-align:center; }
+.reviews-home h2 { font-size:2rem; margin-bottom:25px; color:#111; }
+.reviews-container { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; }
+.review-card { background:#f9f9f9; border:2px solid #ffa600; border-radius:15px; padding:15px; width:260px; text-align:left; transition:0.3s; }
+.review-card:hover { transform:translateY(-5px) scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.1); }
+.review-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; font-weight:bold; color:#111; }
+.stars { color:rgb(255, 255, 255); font-size:0.9rem; }
+.btn-like { background:transparent; border:none; color:#ffffff; cursor:pointer; font-weight:bold; margin-top:5px; }
+@media(max-width:768px){ .reviews-container { flex-direction:column; align-items:center; } }
+
+
+
+/* QUIZ */
+.home-quiz-section {
+    background: linear-gradient(135deg, #fff4e6, #ffe0b3);
+    border: 3px solid #ff7a00;
+    border-radius: 20px;
+    padding: 30px;
+    margin: 40px 0;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(255, 120, 0, 0.2);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.home-quiz-section h2 {
+    color: #ffffff;
+    font-size: 32px;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite alternate;
+}
+
+.home-quiz-badge {
+    display: inline-block;
+    background-color: #fff3e0;
+    color: #ff7a00;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    animation: pulse 1.5s infinite;
+}
+
+.home-quiz-paragraph {
+    background-color: #fff8f0;
+    border-left: 6px solid #ff7a00;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    position: relative;
+    animation: fadeSlide 1s ease-in-out;
+}
+
+.btn-home-quiz {
+    display: inline-block;
+    padding: 18px 35px;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #272727, #ff7a00);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 35px;
+    transition: 0.3s;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(255, 60, 0, 0.4);
+    animation: pulse 1.5s infinite;
+}
+
+.btn-home-quiz:hover {
+    transform: scale(1.1) rotate(-2deg);
+    box-shadow: 0 8px 20px rgba(255, 250, 248, 0.6);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 5px 15px rgba(255, 60, 0, 0.4); }
+    50% { box-shadow: 0 10px 25px rgba(255, 60, 0, 0.7); }
+    100% { box-shadow: 0 5px 15px rgba(255, 60, 0, 0.4); }
+}
+
+@keyframes fadeSlide {
+    0% { opacity: 0; transform: translateX(-20px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive */
+@media(max-width:768px){
+    .home-quiz-section {
+        padding: 20px;
+    }
+
+    .btn-home-quiz {
+        width: 100%;
+        font-size: 1rem;
+    }
+}
+
+
+
+/* affilation2 */
+.affiliate-home-pro {
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+    background: #f9f9f9;
+}
+
+.affiliate-container {
+    max-width: 900px;
+    width: 100%;
+    border: 2px solid #ff7300;
+    border-radius: 12px;
+    padding: 40px 30px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    font-family: 'Segoe UI', sans-serif;
+    line-height: 1.6;
+}
+
+.affiliate-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.affiliate-container h3 {
+    color: #ff8b06;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.affiliate-container p {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 25px 0;
+}
+
+/* STEPS AVEC ICÔNES */
+.affiliate-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.affiliate-step .icon {
+    font-size: 30px;
+    margin-right: 15px;
+}
+
+.affiliate-step .content p {
+    margin: 0;
+}
+
+/* CTA */
+.affiliate-cta {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.btn-dashboard {
+    display: inline-block;
+    background: #111;
+    color: white;
+    font-weight: bold;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-dashboard:hover {
+    background: #333;
+    transform: scale(1.05);
+}
+
+</style>
+
+<script>
+const videoWrapper = document.querySelector('.video-wrapper');
+const video = document.getElementById('course-video');
+const overlay = videoWrapper.querySelector('.play-overlay');
+
+videoWrapper.addEventListener('click', () => {
+    if(video.paused){
+        video.play();
+        overlay.style.display = 'none';
+    } else {
+        video.pause();
+        overlay.style.display = 'block';
+    }
+});
+
+video.addEventListener('ended', () => {
+    overlay.style.display = 'block';
+});
+
+
+// LIKE REVIEW HOME (si tu veux le bouton fonctionnel)
+function likeReview(id){
+    fetch(`/reviews/like/${id}/`,{
+        method:'POST',
+        headers:{'X-CSRFToken':getCookie('csrftoken')}
+    })
+    .then(res=>res.json())
+    .then(data=>document.getElementById('likes-'+id).innerText=data.likes)
+    .catch(err=>console.error(err));
+}
+function getCookie(name){
+    let v=null;
+    document.cookie.split(';').forEach(c=>{
+        if(c.trim().startsWith(name+'=')) v=c.split('=')[1];
+    });
+    return v;
+}
+
+
+</script>
+
+{% endblock %}

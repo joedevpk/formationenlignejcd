@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="quiz-page">
+
+    <div class="quiz-header">
+        <h2>📝 {{ quiz.title }}</h2>
+        <p class="quiz-desc">{{ quiz.description }}</p>
+    </div>
+
+    {% if result %}
+        <div class="quiz-result">
+            <h3>✅ Vous avez déjà passé ce quiz !</h3>
+            <p>Score : {{ result.score }} / {{ quiz.questions.count }}</p>
+            <a href="{% url 'quiz_list' %}" class="btn-submit">Retour aux quiz</a>
+        </div>
+    {% else %}
+    <form method="POST" action="{% url 'submit_quiz' quiz.id %}" class="quiz-form">
+        {% csrf_token %}
+
+        {% for question in questions %}
+        <div class="question-card">
+            <div class="question-header">
+                <span class="question-number">Q{{ forloop.counter }}</span>
+                <h4>{{ question.text }}</h4>
+            </div>
+
+            <div class="choices">
+                <label class="choice">
+                    <input type="radio" name="{{ question.id }}" value="1" required>
+                    <span>{{ question.choice_1 }}</span>
+                </label>
+                <label class="choice">
+                    <input type="radio" name="{{ question.id }}" value="2" required>
+                    <span>{{ question.choice_2 }}</span>
+                </label>
+                <label class="choice">
+                    <input type="radio" name="{{ question.id }}" value="3" required>
+                    <span>{{ question.choice_3 }}</span>
+                </label>
+                <label class="choice">
+                    <input type="radio" name="{{ question.id }}" value="4" required>
+                    <span>{{ question.choice_4 }}</span>
+                </label>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="submit-container">
+            <button type="submit" class="btn-submit">✅ Soumettre le quiz</button>
+        </div>
+    </form>
+    {% endif %}
+
+</div>
+
+<style>
+/* --- Styles identiques à ton code précédent --- */
+.quiz-page {
+    max-width: 850px;
+    margin: auto;
+    padding: 30px 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+.quiz-header h2 {
+    font-size: 2rem;
+    color: #ff7300;
+    margin-bottom: 5px;
+    text-align: center;
+}
+.quiz-desc {
+    color: #555;
+    margin-bottom: 25px;
+    text-align: center;
+}
+.question-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.question-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.question-header h4 { margin: 8px 0 12px; font-weight: 600; }
+.question-number {
+    background: #ff8b06;
+    color: #111;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-right: 10px;
+}
+.choices { display: flex; flex-direction: column; gap: 12px; }
+.choice {
+    background: #f5f5f5;
+    padding: 12px 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+}
+.choice input[type="radio"] { margin-right: 15px; }
+.choice:hover { background: #e0ffe0; }
+.submit-container { text-align: center; margin-top: 25px; }
+.btn-submit {
+    background: linear-gradient(45deg, #ff8902, #ff9c06);
+    color: #111;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.btn-submit:hover { transform: scale(1.05); }
+.quiz-result {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f0f9f0;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.quiz-result h3 { color: #ff9100; margin-bottom: 15px; }
+.quiz-result a.btn-submit { margin-top: 15px; }
+@media(max-width:768px){ .quiz-page { padding: 20px 10px; } }
+</style>
+
+{% endblock %}

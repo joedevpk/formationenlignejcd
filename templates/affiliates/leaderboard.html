@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="leaderboard-container">
+
+    <h1>🏆 Top Affiliés</h1>
+    <p class="subtitle">Qui gagne le plus ?  Inspire-toi et booste ton réseau !</p>
+
+    <div class="leaders">
+        {% if leaders %}
+            {% for user in leaders %}
+                <div class="leader-card">
+                    <div class="position">#{{ forloop.counter }}</div>
+                    <div class="info">
+                        <p class="username">{{ user.affiliate__username }}</p>
+                        <p class="total">{{ user.total }} $</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Aucun affilié pour l'instant. Sois le premier à inviter ! </p>
+        {% endif %}
+    </div>
+
+    <div class="motivation">
+        <h3> Astuces pour grimper le classement :</h3>
+        <ul>
+            <li>Partage ton lien d’affiliation partout </li>
+            <li>Invite tes amis et collègues 👥</li>
+            <li>Active tes notifications pour suivre tes gains en temps réel 🔔</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- STYLE -->
+<style>
+.leaderboard-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 40px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.subtitle {
+    color: gray;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.leaders {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.leader-card {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.leader-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.position {
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 50px;
+    text-align: center;
+    color: #ff7a00;
+}
+
+.info {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.username {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.total {
+    font-weight: bold;
+    color: #1a1a1a;
+}
+
+.motivation {
+    margin-top: 30px;
+    background: #fff4e6;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.motivation ul {
+    margin-left: 20px;
+}
+</style>
+
+{% endblock %}

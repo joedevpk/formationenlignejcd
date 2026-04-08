@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <!--  QR CODE (EN HAUT) -->
+    <div class="qr-card">
+        <h2>Scanner pour payer</h2>
+
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+
+        <p class="phone">+243 816 172 056</p>
+        <p class="name">Nom : Joel Piako</p>
+
+        <div class="status">
+            Paiement sécurisé Mobile Money
+        </div>
+    </div>
+
+    <!--  INFOS ABONNEMENT -->
+    <div class="plan-info">
+        <h1>{{ plan.name }}</h1>
+        <p>{{ plan.price }} $ • {{ plan.duration_days }} jours</p>
+    </div>
+
+    <!--  FORMULAIRE -->
+    <div class="payment-box">
+
+        <h3>Envoyer la preuve de paiement</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <input type="file" name="proof" required>
+
+            <button type="submit">Valider paiement</button>
+        </form>
+
+    </div>
+
+    <!--  GARANTIE -->
+    <div class="guarantee">
+        Activation rapide après validation
+    </div>
+
+</div>
+
+<!--  COURS POPULAIRES -->
+<div class="courses">
+
+    <h2>Cours populaires</h2>
+
+    <div class="course-grid">
+        {% for course in popular_courses %}
+        <div class="course-card">
+
+            {% if course.image %}
+                <img src="{{ course.image.url }}">
+            {% endif %}
+
+            <div class="course-body">
+                <h3>{{ course.title }}</h3>
+
+                {% if course.is_premium %}
+                    <span class="badge premium">Premium</span>
+                {% else %}
+                    <span class="badge free">Gratuit</span>
+                {% endif %}
+
+                <a href="{% url 'course_detail' course.id %}">Voir</a>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<style>
+
+/* ===== GLOBAL ===== */
+body {
+    background: white;
+    font-family: 'Segoe UI', sans-serif;
+    color: #111;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 500px;
+    margin: auto;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* ===== QR CARD ===== */
+.qr-card {
+    background: white;
+    border: 2px solid #ff6600;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.qr-card img {
+    width: 180px;
+    margin: 15px 0;
+}
+
+.phone {
+    font-weight: bold;
+    color: #ff7b00;
+}
+
+.name {
+    font-size: 14px;
+    color: #555;
+}
+
+.status {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #ff9100;
+}
+
+/* ===== PLAN ===== */
+.plan-info h1 {
+    margin-bottom: 5px;
+}
+
+.plan-info p {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* ===== FORM ===== */
+.payment-box {
+    background: #000;
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.payment-box input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: none;
+}
+
+.payment-box button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #ff9901;
+    color: white;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.payment-box button:hover {
+    transform: scale(1.05);
+}
+
+/* ===== GARANTIE ===== */
+.guarantee {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #ff7d04;
+}
+
+/* ===== COURSES ===== */
+.courses {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.course-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.course-card {
+    width: 220px;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+.course-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+}
+
+.course-body {
+    padding: 10px;
+}
+
+.course-body h3 {
+    font-size: 1rem;
+}
+
+/* BADGES */
+.badge {
+    display: inline-block;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 5px 0;
+}
+
+.premium {
+    background: black;
+    color: white;
+}
+
+.free {
+    background: #ff8009;
+    color: white;
+}
+
+/* BUTTON */
+.course-body a {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: #ff7403;
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .course-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+
+/* Animation pulsation douce pour le QR code */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgb(255, 145, 0);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px 10px rgba(40, 167, 69, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+  }
+}
+
+.qr-card img {
+  animation: pulse 3s infinite;
+  border-radius: 12px; /* optionnel pour arrondir les coins */
+  transition: transform 0.3s ease;
+}
+
+.qr-card img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px 8px rgba(255, 170, 14, 0.8);
+}
+
+</style>
+
+{% endblock %}

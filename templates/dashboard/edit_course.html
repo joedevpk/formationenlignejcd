@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2>Modifier le cours : {{ course.title }}</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label>Titre :</label>
+        <input type="text" name="title" value="{{ course.title }}" required>
+
+        <label>Description :</label>
+        <textarea name="description" required>{{ course.description }}</textarea>
+
+        <label>Type de cours :</label>
+        <select name="is_premium">
+            <option value="False" {% if not course.is_premium %}selected{% endif %}>Gratuit</option>
+            <option value="True" {% if course.is_premium %}selected{% endif %}>Premium 💎</option>
+        </select>
+
+        <label>Image (optionnelle) :</label>
+        <input type="file" name="image">
+
+        <button type="submit">Enregistrer les modifications</button>
+    </form>
+</div>
+{% endblock %}

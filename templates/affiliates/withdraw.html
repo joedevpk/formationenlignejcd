@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>💰 Retrait de ton solde</h1>
+        <p>Retire tes gains facilement via Mobile Money</p>
+    </section>
+
+    <!-- CARD -->
+    <div class="card">
+
+        <h2>💵 Solde disponible</h2>
+        <p class="balance">{{ affiliate.balance }} $</p>
+
+        {% if affiliate.balance > 0 %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- NUMERO -->
+            <label>📱 Numéro Mobile Money</label>
+            <input type="text" name="phone" placeholder="Ex: 243812345678" required>
+
+            <button type="submit">💳 Retirer maintenant</button>
+        </form>
+
+        {% else %}
+            <p class="no-balance">Aucun solde disponible</p>
+        {% endif %}
+
+        <!-- MESSAGES -->
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<style>
+
+/* GLOBAL */
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 40px 20px;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* HERO */
+.hero h1 {
+    font-size: 2.2rem;
+    color: #ff3c00;
+}
+.hero p {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* CARD */
+.card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* SOLDE */
+.balance {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #28a745;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+    margin-top: 20px;
+    padding: 15px;
+    width: 100%;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(45deg, #ff3c00, #ff7a00);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+button:hover {
+    transform: scale(1.05);
+}
+
+/* MESSAGE */
+.message {
+    margin-top: 15px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* NO BALANCE */
+.no-balance {
+    color: red;
+    margin-top: 20px;
+}
+
+</style>
+
+{% endblock %}

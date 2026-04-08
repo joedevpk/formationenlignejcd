@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block title %}Aide & FAQ - Joe Dev Academy{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* Styles globaux */
+body {
+    background-color: #fff; /* fond blanc */
+    color: #111; /* texte noir */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== FAQ STYLE ===== */
+.faq-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-top: 3rem;
+    color: #ff6803;
+    font-weight: 700;
+}
+
+.faq-subtitle {
+    text-align: center;
+    color: #bbb;
+    margin-bottom: 3rem;
+    font-weight: 500;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 0 1rem;
+    background: #ece6e6;
+}
+
+.faq-item {
+    background: #000000;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    transition: background 0.3s ease;
+}
+
+.faq-question {
+    padding: 18px 25px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    color: #ff7b00;
+    font-size: 1.15rem;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.faq-question:hover {
+    background: #222;
+}
+
+.faq-question span {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+    color: #ff8818;
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 25px;
+    color: #000000;
+    font-size: 1rem;
+    line-height: 1.5;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    background: #ffffff;
+    border-top: 1px solid #222;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px;
+    padding: 18px 25px;
+}
+
+.faq-item.active .faq-question span {
+    transform: rotate(45deg);
+}
+
+/* ===== WhatsApp BUTTON ===== */
+.faq-support {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.faq-support p {
+    color: #888;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+#whatsapp-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    transition: all 0.4s ease, transform 0.3s ease;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    user-select: none;
+}
+
+#whatsapp-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+    .faq-question {
+        font-size: 1rem;
+        padding: 14px 18px;
+    }
+    .faq-answer {
+        font-size: 0.9rem;
+        padding: 14px 18px;
+    }
+    #whatsapp-btn {
+        font-size: 1rem;
+        padding: 12px 24px;
+    }
+}
+</style>
+
+<h3 class="faq-title">❓ Aide & FAQ</h3>
+<p class="faq-subtitle">Tout ce que vous devez savoir pour utiliser Joe Dev Academy </p>
+
+<div class="faq-container">
+
+    <div class="faq-item">
+        <div class="faq-question"> Comment fonctionne l’abonnement ? <span>+</span></div>
+        <div class="faq-answer">
+            Vous choisissez un plan mensuel, vous payez, puis vous accédez à toutes les formations pendant la durée de votre abonnement.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question"> Pourquoi je n’arrive pas à accéder aux cours ? <span>+</span></div>
+        <div class="faq-answer">
+            Vous devez être connecté et avoir un abonnement actif. Si votre abonnement a expiré, l'accès est bloqué automatiquement.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question"> Où trouver mes cours ? <span>+</span></div>
+        <div class="faq-answer">
+            Tous vos cours sont disponibles dans votre Dashboard après connexion.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question"> Comment payer mon abonnement ? <span>+</span></div>
+        <div class="faq-answer">
+            Paiement via Mobile Money. Ensuite vous envoyez la preuve pour validation.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question"> Que se passe-t-il si mon abonnement expire ? <span>+</span></div>
+        <div class="faq-answer">
+            L’accès aux cours est bloqué automatiquement jusqu’au renouvellement.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question"> Comment renouveler ? <span>+</span></div>
+        <div class="faq-answer">
+            Retournez sur la page abonnement et effectuez un nouveau paiement.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">📞 Comment contacter le support ? <span>+</span></div>
+        <div class="faq-answer">
+            Contactez-nous via WhatsApp ou la page Contact.
+        </div>
+    </div>
+
+</div>
+
+<div class="faq-support">
+    <p>Besoin d’aide rapide ?</p>
+    <a href="#" target="_blank" id="whatsapp-btn" aria-label="Contacter support WhatsApp">
+        💬 Contacter sur WhatsApp
+    </a>
+</div>
+
+<script>
+// ===== FAQ TOGGLE =====
+document.querySelectorAll(".faq-question").forEach(item => {
+    item.addEventListener("click", () => {
+        const parent = item.parentElement;
+        document.querySelectorAll(".faq-item").forEach(el => {
+            if(el !== parent){ el.classList.remove("active"); }
+        });
+        parent.classList.toggle("active");
+    });
+});
+
+// ===== WhatsApp BUTTON INTELLIGENT =====
+function updateWhatsappButton() {
+    const btn = document.getElementById("whatsapp-btn");
+    const hour = new Date().getHours();
+    let colorStart, colorMiddle, colorEnd;
+    let greeting = "Bonjour";
+
+    if(hour >= 6 && hour < 12){ 
+        colorStart = "#00ff4c"; colorMiddle = "#66ff99"; colorEnd = "#00cc33";
+        greeting = "Bonjour";
+    } else if(hour >= 12 && hour < 18){ 
+        colorStart = "#ffcc00"; colorMiddle = "#ffaa00"; colorEnd = "#ff8800";
+        greeting = "Bon après-midi";
+    } else { 
+        colorStart = "#0055cc"; colorMiddle = "#003399"; colorEnd = "#001a66";
+        greeting = "Bonsoir";
+    }
+
+    // Dégradé de couleur
+    btn.style.background = `linear-gradient(45deg, ${colorStart}, ${colorMiddle}, ${colorEnd})`;
+
+    // Nom utilisateur Django
+    let username = "{{ request.user.username|default:'Joe' }}";
+
+    // Message WhatsApp pré-rempli
+    let message = encodeURIComponent(`${greeting} ${username}, j'ai besoin d'aide sur Joe dev academy 🚀`);
+    btn.href = `https://wa.me/243816172056?text=${message}`;
+}
+
+// Initialisation
+updateWhatsappButton();
+setInterval(updateWhatsappButton, 600000);
+</script>
+
+{% endblock %}

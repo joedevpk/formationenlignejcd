@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="quiz-list-page">
+
+    <!-- HEADER -->
+    <h1>📚 Tous les Quiz</h1>
+    <p class="subtitle">Choisissez un quiz et testez vos connaissances 🚀</p>
+
+    <!-- GRID -->
+    <div class="quiz-grid">
+
+        {% for quiz in quizzes %}
+        <div class="quiz-card">
+
+            <div class="quiz-top">
+                <h3>{{ quiz.title }}</h3>
+                <span class="quiz-badge">
+                    {{ quiz.questions.count }} questions
+                </span>
+            </div>
+
+            <p class="quiz-desc">
+                {{ quiz.description|default:"Aucune description disponible."|truncatechars:80 }}
+            </p>
+
+            <div class="quiz-actions">
+                <a href="{% url 'quiz_detail' quiz.id %}" class="btn-start">
+                    ▶ Commencer
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+            <p>Aucun quiz disponible pour le moment.</p>
+        {% endfor %}
+
+    </div>
+</div>
+
+<style>
+
+/* PAGE */
+.quiz-list-page {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+    font-family: 'Segoe UI', sans-serif;
+    text-align: center;
+}
+
+/* TITRE */
+.quiz-list-page h1 {
+    color: #ff8800;
+    font-size: 2.2rem;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 30px;
+}
+
+/* GRID */
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* CARD */
+.quiz-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    text-align: left;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.quiz-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+/* HEADER CARD */
+.quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quiz-card h3 {
+    color: #ff8800;
+    font-size: 1.3rem;
+}
+
+/* BADGE */
+.quiz-badge {
+    background: #e0ffe0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+/* DESCRIPTION */
+.quiz-desc {
+    color: #555;
+    margin: 15px 0;
+}
+
+/* ACTION */
+.quiz-actions {
+    margin-top: auto;
+}
+
+.btn-start {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(45deg, #f78503, #ffa601);
+    padding: 12px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: #111;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-start:hover {
+    transform: scale(1.05);
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .quiz-list-page {
+        padding: 20px 10px;
+    }
+}
+
+</style>
+
+{% endblock %}

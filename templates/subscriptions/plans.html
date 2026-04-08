@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HERO -->
+    <h1>Choisis ton abonnement</h1>
+
+    <p class="subtitle">
+        Accède à toutes les formations premium et développe tes compétences.
+    </p>
+
+    <a href="/" class="btn-secondary">← Voir les cours</a>
+
+    <!-- AVANTAGES -->
+    <div class="benefits">
+        <p>✔ Accès illimité aux cours</p>
+        <p>✔ Contenu premium</p>
+        <p>✔ Mise à jour régulière</p>
+        <p>✔ Support WhatsApp</p>
+    </div>
+
+    <!--  PLANS EN HORIZONTAL -->
+    <div class="plans">
+
+        {% for plan in plans %}
+        <div class="plan-card">
+
+            {% if forloop.first %}
+                <div class="badge">Populaire</div>
+            {% endif %}
+
+            <h2>{{ plan.name }}</h2>
+            <h3>{{ plan.price }} $</h3>
+
+            <p class="duration">
+                {{ plan.duration_days }} jours d’accès
+            </p>
+
+            <ul>
+                <li>✔ Tous les cours</li>
+                <li>✔ Accès illimité</li>
+                <li>✔ Mises à jour incluses</li>
+            </ul>
+
+            <a href="{% url 'subscribe' plan.id %}" class="btn">
+                💎 S’abonner
+            </a>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <!-- GARANTIE -->
+    <div class="guarantee">
+        <p>🔒 Paiement sécurisé</p>
+        <p>⚡ Activation rapide</p>
+    </div>
+
+</div>
+
+<style>
+
+/* ===== GLOBAL ===== */
+body {
+    background: white;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* TEXT */
+.subtitle {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* BUTTON */
+.btn-secondary {
+    display: inline-block;
+    margin-bottom: 25px;
+    background: #eee;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #111;
+}
+
+/* BENEFITS */
+.benefits {
+    margin-bottom: 40px;
+}
+
+.benefits p {
+    margin: 5px 0;
+}
+
+/*  GRID HORIZONTAL */
+.plans {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* PLAN */
+.plan-card {
+    border: 2px solid #ff7b00;
+    padding: 25px;
+    border-radius: 15px;
+    width: 280px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.plan-card:hover {
+    transform: translateY(-8px);
+}
+
+/* BADGE */
+.badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ffa600;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+/* PRICE */
+.plan-card h3 {
+    color: #ff8800;
+    margin: 10px 0;
+}
+
+/* LIST */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    margin: 5px 0;
+}
+
+/* BUTTON */
+.btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #ff8b07;
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* GARANTIE */
+.guarantee {
+    margin-top: 40px;
+    color: #ff7b00;
+    font-size: 13px;
+}
+
+/* 📱 RESPONSIVE */
+@media(max-width:768px){
+    .plans {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+</style>
+
+{% endblock %}

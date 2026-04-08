@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="course-container">
+
+  <!-- HEADER -->
+  <header class="course-header">
+    <h1>{{ course.title }}</h1>
+    <div class="course-rating">
+      <span class="avg">{{ average }}/5 ⭐</span>
+      <span class="total-reviews">({{ total_reviews }} avis)</span>
+    </div>
+  </header>
+
+  <!-- VIDEO SECTION -->
+  <section class="video-section">
+    {% if has_access %}
+      {% for lesson in course.lessons.all %}
+        <div class="video-card" data-lesson-id="{{ lesson.id }}">
+          <div class="video-wrapper">
+            <video id="v{{ lesson.id }}" playsinline>
+                <source src="{{ lesson.video.url }}" type="video/mp4">
+                Votre navigateur ne supporte pas la vidéo.
+            </video>
+            <!-- CONTROLS -->
+            <div class="video-controls">
+              <button onclick="togglePlay({{ lesson.id }})" id="play-{{ lesson.id }}">▶️</button>
+              <button onclick="muteVideo({{ lesson.id }})" id="mute-{{ lesson.id }}">🔊</button>
+              <select onchange="changeSpeed({{ lesson.id }}, this.value)">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+              <button onclick="resizeVideo({{ lesson.id }},1.1)">➕</button>
+              <button onclick="resizeVideo({{ lesson.id }},0.9)">➖</button>
+              <button onclick="resetVideoSize({{ lesson.id }})">♻️</button>
+            </div>
+            <div class="progress" id="p{{ lesson.id }}"></div>
+          </div>
+          <h3>{{ lesson.title }}</h3>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="locked">
+        <h2>🔒 Accès réservé</h2>
+        <a href="{% url 'plans' %}" class="btn-subscribe">S’abonner</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if not user_review and has_access %}
+      <form method="POST" class="review-form">
+        {% csrf_token %}
+        <label>Votre note :</label>
+        <select name="rating">
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+        </select>
+        <textarea name="comment" placeholder="Votre avis..." required></textarea>
+        <button type="submit" class="btn">Envoyer</button>
+      </form>
+    {% else %}
+      <p class="already">✅ Vous avez déjà commenté ou accès requis</p>
+    {% endif %}
+
+    <div class="reviews-list">
+      {% for review in reviews %}
+        <div class="review-card">
+          <div class="review-header">
+            <strong>{{ review.user.username }}</strong>
+            <div class="stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %} ★ {% else %} ☆ {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <p>{{ review.comment }}</p>
+          <button type="button" class="btn-like" onclick="likeReview({{ review.id }})">
+            👍 <span id="likes-{{ review.id }}">{{ review.likes.count|default:0 }}</span>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TOP USERS -->
+  <aside class="top-users">
+    <h3>🏆 Top Reviewers</h3>
+    {% for user in top_reviewers %}
+      <p>{{ user.username }} ({{ user.total_reviews }})</p>
+    {% endfor %}
+  </aside>
+</div>
+
+<!-- MINI-PLAYER FLOTTANT -->
+<div id="mini-player">
+  <div id="mini-player-title">Titre de la vidéo</div>
+  <video id="mini-video" playsinline muted></video>
+  <div id="mini-controls">
+    <button onclick="toggleMiniPlay()" id="mini-play">▶️</button>
+    <button onclick="toggleMiniMute()" id="mini-mute">🔊</button>
+    <select onchange="changeMiniSpeed(this.value)">
+      <option value="0.5">0.5x</option>
+      <option value="1" selected>1x</option>
+      <option value="1.5">1.5x</option>
+      <option value="2">2x</option>
+    </select>
+    <button onclick="closeMiniPlayer()">❌</button>
+  </div>
+</div>
+
+<style>
+body { font-family:'Segoe UI', sans-serif; background:#121212; color:#fff; margin:0; padding:0; }
+.course-container { max-width:1000px; margin:auto; padding:15px; }
+.course-header { text-align:center; margin-bottom:30px; }
+.course-header h1 { font-size:2rem; margin-bottom:5px; }
+.course-rating { color:#aaa; font-size:0.9rem; }
+
+.video-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin-bottom:40px; }
+.video-card { background:#1e1e1e; border-radius:12px; overflow:hidden; }
+.video-wrapper { position:relative; border:1px solid #333; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; align-items:center; }
+.video-wrapper video { width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover; }
+.video-controls { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; background:#000; padding:5px; gap:5px; font-size:0.9rem; }
+.video-controls button { background:#ff5e00; border:none; padding:5px 8px; border-radius:5px; cursor:pointer; }
+.video-controls select { background:#111; color:#fff; border:none; border-radius:5px; padding:4px; }
+.progress { position:absolute; bottom:0; left:0; height:4px; background:#1DB954; width:0%; transition:width 0.1s; }
+
+.locked { text-align:center; padding:40px; border:2px dashed #ff5555; border-radius:12px; }
+.btn-subscribe { background:#ff9100; color:#fff; padding:10px 20px; text-decoration:none; border-radius:25px; font-weight:bold; }
+
+.review-form select, .review-form textarea { width:100%; margin:8px 0; padding:10px; border-radius:8px; border:none; }
+.review-form button { background:#1DB954; border:none; padding:10px 15px; border-radius:25px; font-weight:bold; cursor:pointer; }
+.review-card { background:#1e1e1e; padding:12px; border-radius:12px; margin-bottom:12px; }
+.review-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+.stars { color:gold; }
+.btn-like { background:transparent; border:none; color:#ff7300; cursor:pointer; }
+.alert { background:#ff5555; padding:8px; margin:8px 0; border-radius:8px; }
+
+.top-users { background:#1e1e1e; padding:15px; border-radius:12px; margin-bottom:40px; }
+.top-users h3 { margin-bottom:10px; }
+
+/* MINI PLAYER */
+#mini-player {
+  position:fixed; bottom:15px; right:15px; width:280px; background:#1e1e1e; border-radius:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.7); display:none; flex-direction:column; z-index:9999; overflow:hidden;
+  transition:transform 0.3s ease, opacity 0.3s ease;
+}
+#mini-player.show { display:flex; opacity:1; transform:translateY(0); }
+#mini-player.hide { opacity:0; transform:translateY(100px); }
+#mini-player video { width:100%; aspect-ratio:1/1; object-fit:cover; }
+#mini-controls { display:flex; justify-content:space-between; align-items:center; background:#000; padding:5px; font-size:0.9rem; }
+#mini-player-title { padding:5px 10px; font-size:0.9rem; color:#ff6600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+@media(max-width:600px){ #mini-player{width:90%; bottom:10px; right:5%;} }
+</style>
+
+<script>
+// MAIN VIDEO CONTROLS
+function togglePlay(id){
+  const video=document.getElementById('v'+id);
+  const btn=document.getElementById('play-'+id);
+  video.paused?video.play():video.pause();
+  btn.textContent=video.paused?'▶️':'⏸️';
+  video.ontimeupdate=()=>{document.getElementById('p'+id).style.width=(video.currentTime/video.duration*100)+'%'; checkMiniPlayer(video,id);};
+}
+function changeVolume(id,delta){ const video=document.getElementById('v'+id); video.volume=Math.min(1,Math.max(0,video.volume+delta)); }
+function changeSpeed(id,speed){ document.getElementById('v'+id).playbackRate=parseFloat(speed); }
+function resizeVideo(id,f){ const v=document.getElementById('v'+id); v.style.width=(v.clientWidth*f)+'px'; v.style.height='auto'; }
+function resetVideoSize(id){ const v=document.getElementById('v'+id); v.style.width='100%'; v.style.height='auto'; }
+function muteVideo(id){ const video=document.getElementById('v'+id); video.muted=!video.muted; document.getElementById('mute-'+id).textContent=video.muted?'🔇':'🔊'; }
+
+// LIKE
+function likeReview(id){
+  fetch(`/reviews/like/${id}/`,{method:'POST',headers:{'X-CSRFToken':getCookie('csrftoken')}})
+  .then(res=>res.json()).then(data=>document.getElementById('likes-'+id).innerText=data.likes).catch(err=>console.error(err));
+}
+function getCookie(name){let v=null; document.cookie.split(';').forEach(c=>{if(c.trim().startsWith(name+'='))v=c.split('=')[1];}); return v;}
+
+// MINI PLAYER
+let currentMini=null;
+function checkMiniPlayer(video,id){
+  const rect=video.getBoundingClientRect();
+  if(rect.top<0 && !video.paused){ showMiniPlayer(video,id); }
+  else if(currentMini && (video.paused || rect.top>=0)){ hideMiniPlayer(); }
+}
+
+function showMiniPlayer(video,id){
+  currentMini={video:video,id:id};
+  const mini=document.getElementById('mini-player');
+  const miniVideo=document.getElementById('mini-video');
+  document.getElementById('mini-player-title').textContent=document.querySelector(`.video-card[data-lesson-id='${id}'] h3`).textContent;
+  miniVideo.src=video.currentSrc;
+  miniVideo.currentTime=video.currentTime;
+  miniVideo.playbackRate=video.playbackRate;
+  miniVideo.muted=video.muted;
+  mini.classList.add('show'); mini.classList.remove('hide');
+  miniVideo.play();
+}
+
+function hideMiniPlayer(){ 
+  const mini=document.getElementById('mini-player'); 
+  mini.classList.add('hide'); 
+  mini.classList.remove('show'); 
+  const miniVideo=document.getElementById('mini-video');
+  miniVideo.pause();
+  currentMini=null; 
+}
+
+function toggleMiniPlay(){ 
+  const v=document.getElementById('mini-video'); 
+  v.paused?v.play():v.pause(); 
+  document.getElementById('mini-play').textContent=v.paused?'▶️':'⏸️'; 
+}
+function toggleMiniMute(){ 
+  const v=document.getElementById('mini-video'); 
+  v.muted=!v.muted; 
+  document.getElementById('mini-mute').textContent=v.muted?'🔇':'🔊'; 
+}
+function changeMiniSpeed(speed){ document.getElementById('mini-video').playbackRate=parseFloat(speed); }
+function closeMiniPlayer(){ hideMiniPlayer(); }
+</script>
+{% endblock %}

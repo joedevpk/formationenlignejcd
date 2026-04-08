@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="notif-container">
+
+    <div class="notif-header">
+        <h2>🔔 Notifications</h2>
+        <button onclick="markAllRead()" class="mark-btn">
+            Tout marquer comme lu
+        </button>
+    </div>
+
+    <div id="notif-list">
+        {% for notif in notifications %}
+        <div class="notif-card {% if not notif.is_read %}unread{% endif %}" data-id="{{ notif.id }}">
+            
+            <div class="notif-content" onclick="markRead(this, {{ notif.id }})">
+                <p>{{ notif.message }}</p>
+                <small>{{ notif.created_at|date:"d M Y H:i" }}</small>
+            </div>
+
+            <div class="notif-actions">
+                {% if not notif.is_read %}
+                <span class="badge">Nouveau</span>
+                {% endif %}
+                <button onclick="deleteNotif({{ notif.id }}, this)">🗑️</button>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty">
+            <p>😴 Aucune notification pour le moment</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<style>
+/* ===== CONTAINER ===== */
+.notif-container {
+    max-width: 700px;
+    margin: auto;
+    padding: 30px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* ===== HEADER ===== */
+.notif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.notif-header h2 {
+    margin: 0;
+}
+
+.mark-btn {
+    background: #ff8a05;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.mark-btn:hover {
+    background: #ff7f07;
+}
+
+/* ===== CARD ===== */
+.notif-card {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.notif-card:hover {
+    transform: translateY(-3px);
+}
+
+.notif-card.unread {
+    border-left: 5px solid #ff8800;
+    background: #f0fff4;
+}
+
+.notif-content p {
+    margin: 0;
+    font-weight: 500;
+}
+
+.notif-content small {
+    color: gray;
+}
+
+.notif-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge {
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.notif-actions button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* empty */
+.empty {
+    text-align: center;
+    margin-top: 50px;
+    color: gray;
+}
+</style>
+
+<script>
+//  marquer une notif comme lue au clic
+function markRead(el, id){
+    fetch(`/notifications/read/${id}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    }).then(() => {
+        const card = el.closest('.notif-card');
+        card.classList.remove('unread');
+        const badge = card.querySelector('.badge');
+        if(badge) badge.remove();
+        updateNotifCount();
+    });
+}
+
+// 🔴 supprimer notification
+function deleteNotif(id, btn){
+    event.stopPropagation();
+    fetch(`/notifications/delete/${id}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    }).then(() => {
+        btn.closest('.notif-card').remove();
+        updateNotifCount();
+    });
+}
+
+// 🔥 marquer toutes les notifications comme lues
+function markAllRead(){
+    fetch("/notifications/mark-as-read-all/", {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    }).then(() => {
+        document.querySelectorAll('.notif-card.unread').forEach(card => {
+            card.classList.remove('unread');
+            const badge = card.querySelector('.badge');
+            if(badge) badge.remove();
+        });
+        updateNotifCount();
+    });
+}
+
+// Mettre à jour le badge dans la navbar
+function updateNotifCount(){
+    fetch("/notifications/unread-count/")
+    .then(res => res.json())
+    .then(data => {
+        const badge = document.getElementById("notif-count");
+        if(data.count > 0){
+            badge.innerText = data.count;
+            badge.style.display = "inline-block";
+        } else {
+            badge.style.display = "none";
+        }
+    });
+}
+
+updateNotifCount();
+</script>
+
+{% endblock %}

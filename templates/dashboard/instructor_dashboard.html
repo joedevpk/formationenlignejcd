@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Dashboard Formateur</h1>
+    <p class="subtitle">
+        Bienvenue dans votre espace formateur. Gérez facilement vos cours,
+        améliorez votre contenu pédagogique et offrez une meilleure expérience à vos étudiants.
+    </p>
+
+    <p class="subtitle">
+        Vous avez actuellement <strong>{{ total_courses }}</strong> cours publié(s).
+    </p>
+
+    </a>
+    <p class="subtitle">Vos cours et actions rapides</p>
+
+    <!-- ➕ Ajouter un cours -->
+    <a href="#addCourseModal" class="btn-add" onclick="openModal('addCourseModal')">➕ Ajouter un cours</a>
+
+    <!-- LISTE DES COURS -->
+    <div class="courses-cards">
+        {% for course in courses %}
+        <div class="course-card">
+            {% if course.image %}
+            <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-img">
+            {% endif %}
+            <h3>{{ course.title }} {% if course.is_premium %}💎{% endif %}</h3>
+            <p>{{ course.description|truncatechars:120 }}</p>
+            <div class="actions">
+                <a href="#" class="btn-edit" onclick="openEditModal({{ course.id }}, '{{ course.title|escapejs }}', '{{ course.description|escapejs }}', '{{ course.is_premium }}')">✏️ Modifier</a>
+                <a href="#" class="btn-delete" onclick="openDeleteModal({{ course.id }}, '{{ course.title|escapejs }}')">🗑 Supprimer</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ====================== MODAL AJOUT ====================== -->
+<div id="addCourseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('addCourseModal')">&times;</span>
+        <h2>Ajouter un nouveau cours</h2>
+        <form method="POST" action="{% url 'add_course' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="title">Titre :</label>
+            <input type="text" name="title" id="title" required>
+            
+            <label for="description">Description :</label>
+            <textarea name="description" id="description" required></textarea>
+
+            <label for="is_premium">Type :</label>
+            <select name="is_premium">
+                <option value="False">Gratuit</option>
+                <option value="True">Premium 💎</option>
+            </select>
+
+            <label for="image">Image (optionnelle) :</label>
+            <input type="file" name="image">
+
+            <button type="submit" class="btn submit-btn">Ajouter</button>
+        </form>
+    </div>
+</div>
+
+<!-- ====================== MODAL MODIFIER ====================== -->
+<div id="editCourseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('editCourseModal')">&times;</span>
+        <h2>Modifier le cours</h2>
+        <form id="editCourseForm" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>Titre :</label>
+            <input type="text" name="title" id="editTitle" required>
+            
+            <label>Description :</label>
+            <textarea name="description" id="editDescription" required></textarea>
+
+            <label>Type :</label>
+            <select name="is_premium" id="editIsPremium">
+                <option value="False">Gratuit</option>
+                <option value="True">Premium 💎</option>
+            </select>
+
+            <label>Image (optionnelle) :</label>
+            <input type="file" name="image">
+
+            <button type="submit" class="btn submit-btn">Enregistrer</button>
+        </form>
+    </div>
+</div>
+
+<!-- ====================== MODAL SUPPRIMER ====================== -->
+<div id="deleteCourseModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('deleteCourseModal')">&times;</span>
+        <h2>Supprimer le cours</h2>
+        <p id="deleteMessage"></p>
+        <form id="deleteCourseForm" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">Supprimer</button>
+            <button type="button" class="btn cancel-btn" onclick="closeModal('deleteCourseModal')">Annuler</button>
+        </form>
+    </div>
+</div>
+
+<!-- ====================== STYLES ====================== -->
+<style>
+/* ===== GLOBAL ===== */
+.container { max-width: 1000px; margin:auto; padding:40px 20px; text-align:center; }
+h1 { color:#ff3c00; margin-bottom:15px; }
+.subtitle { color:#555; margin-bottom:30px; font-size:1.1rem; }
+
+/* BOUTONS */
+.btn-add { display:inline-block; margin-bottom:20px; padding:10px 20px; background:#ff7b00; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; transition:0.3s; }
+.btn-add:hover { background:#ff6600; }
+
+.btn-dashboard { display:inline-block; background:#ff7a00; color:#fff; padding:12px 25px; border-radius:8px; font-weight:bold; text-decoration:none; transition:0.3s; }
+.btn-dashboard:hover { background:#ff9100; transform:scale(1.05); }
+
+.courses-cards { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+.course-card { background:#fff4e6; border:2px solid #ff7a00; border-radius:15px; width:250px; padding:15px; text-align:left; box-shadow:0 5px 15px rgba(0,0,0,0.1); transition:0.3s; }
+.course-card:hover { transform:scale(1.03); box-shadow:0 8px 25px rgba(0,0,0,0.15); }
+.course-img { width:100%; border-radius:10px; margin-bottom:10px; }
+.actions { margin-top:10px; display:flex; justify-content:space-between; }
+
+/* BOUTONS MODALS */
+.btn-edit { background:#28a745; color:#fff; padding:5px 10px; border-radius:6px; text-decoration:none; font-weight:bold; }
+.btn-edit:hover { background:#218838; }
+.btn-delete { background:#dc3545; color:#fff; padding:5px 10px; border-radius:6px; font-weight:bold; text-decoration:none; }
+.btn-delete:hover { background:#c82333; }
+.cancel-btn { background:#6c757d; color:#fff; padding:5px 10px; border-radius:6px; font-weight:bold; border:none; cursor:pointer; }
+.cancel-btn:hover { background:#5a6268; }
+
+/* MODALS */
+.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.5); }
+.modal-content { background:#fff; margin:10% auto; padding:30px; border-radius:15px; width:90%; max-width:500px; position:relative; }
+.close { position:absolute; right:20px; top:15px; font-size:25px; cursor:pointer; }
+
+/* FORM */
+input, textarea, select { width:100%; padding:8px; margin:8px 0; border-radius:6px; border:1px solid #ccc; }
+button { cursor:pointer; }
+</style>
+
+<!-- ====================== SCRIPTS ====================== -->
+<script>
+// Ouvrir modal
+function openModal(id){ 
+    document.getElementById(id).style.display='block'; 
+}
+
+function closeModal(id){ 
+    document.getElementById(id).style.display='none'; 
+}
+
+// MODAL MODIFIER
+function openEditModal(courseId, title, description, isPremium){
+    document.getElementById('editTitle').value = title;
+    document.getElementById('editDescription').value = description;
+    document.getElementById('editIsPremium').value = isPremium;
+
+    // ✅ URL corrigée (SANS /courses/)
+    document.getElementById('editCourseForm').action = '/edit-course/' + courseId + '/';
+
+    openModal('editCourseModal');
+}
+
+// MODAL SUPPRIMER
+function openDeleteModal(courseId, title){
+    document.getElementById('deleteMessage').innerText = 
+        "Voulez-vous vraiment supprimer le cours '" + title + "' ?";
+
+    // ✅ URL corrigée (SANS /courses/)
+    document.getElementById('deleteCourseForm').action = '/delete-course/' + courseId + '/';
+
+    openModal('deleteCourseModal');
+}
+
+// Fermer modal si clic en dehors
+window.onclick = function(event){
+    ['addCourseModal','editCourseModal','deleteCourseModal'].forEach(id=>{
+        const modal = document.getElementById(id);
+        if(event.target == modal){
+            modal.style.display='none';
+        }
+    });
+}
+</script>
+{% endblock %}

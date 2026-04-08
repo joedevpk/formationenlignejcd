@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="lock-card">
+
+        <div class="lock-icon">🔒</div>
+
+        <h1>Accès verrouillé</h1>
+
+        <p>
+            Ce cours est réservé aux abonnés premium.
+        </p>
+
+        <p>
+            Ton abonnement a expiré ou tu n'as pas encore accès à ce contenu exclusif.
+        </p>
+
+        <hr class="divider">
+
+        <!-- BOUTON ABONNEMENT -->
+        <a href="/subscriptions/plans/" class="btn-subscribe">
+            💎 S'abonner maintenant
+        </a>
+
+        <!-- RETOUR -->
+        <br>
+        <a href="/" class="back-link">
+            ⬅ Retour aux cours
+        </a>
+
+        <!-- GARANTIE -->
+        <div class="guarantee">
+            <p>🔒 Paiement sécurisé</p>
+            <p>⚡ Accès immédiat après validation</p>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+/* ===== GLOBAL ===== */
+body {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 500px;
+    margin: 80px auto;
+    text-align: center;
+}
+
+/* ===== LOCK CARD ===== */
+.lock-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-left: 5px solid #28a745;
+    transition: transform 0.3s, box-shadow 0.3s, border-left-color 0.3s;
+}
+
+.lock-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border-left-color: #00c853;
+}
+
+/* ICON */
+.lock-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+/* TITRE */
+.lock-card h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: #111;
+}
+
+/* TEXTE */
+.lock-card p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* DIVIDER */
+.divider {
+    margin: 25px 0;
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+/* BOUTON ABONNEMENT */
+.btn-subscribe {
+    display: inline-block;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #28a745, #00c853);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-subscribe:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(40,167,69,0.4);
+}
+
+/* RETOUR */
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #777;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: #28a745;
+}
+
+/* GARANTIE */
+.guarantee {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.guarantee p {
+    margin: 5px 0;
+}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+    .lock-card {
+        padding: 30px 20px;
+    }
+
+    .lock-card h1 {
+        font-size: 1.6rem;
+    }
+
+    .lock-icon {
+        font-size: 2.5rem;
+    }
+}
+</style>
+
+{% endblock %}

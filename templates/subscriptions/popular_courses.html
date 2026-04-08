@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Paiement de l’abonnement</h1>
+        <p>{{ plan.name }} — {{ plan.price }} $ / {{ plan.duration_days }} jours</p>
+    </div>
+
+    <!-- ACTION -->
+    <div class="top-actions">
+        <a href="{% url 'plans' %}" class="btn-outline">← Retour</a>
+    </div>
+
+    <!-- PAYMENT CARD -->
+    <div class="payment-card">
+
+        <!-- IMAGE -->
+        <div class="card-image">
+            <img src="/static/image/payment.jpeg" alt="Paiement">
+        </div>
+
+        <div class="card-content">
+            <h2>{{ plan.name }}</h2>
+            <p class="price">{{ plan.price }} $</p>
+            <p class="desc">Accès complet pendant {{ plan.duration_days }} jours</p>
+
+            <!-- BENEFITS -->
+            <ul class="benefits">
+                <li>✔ Accès illimité</li>
+                <li>✔ Contenu premium</li>
+                <li>✔ Support</li>
+            </ul>
+
+            <!-- FORM -->
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <label> Preuve de paiement</label>
+                <input type="file" name="proof" required>
+
+                <button type="submit" class="btn-main">
+                    Valider paiement
+                </button>
+            </form>
+
+            <!-- MPESA -->
+            <div class="mpesa">
+                <p>Paiement via Mpesa</p>
+                <strong>+243 816172056</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- COURSES -->
+<h2 class="section-title">Cours populaires</h2>
+
+<div class="courses">
+    {% for course in popular_courses %}
+    <div class="course">
+
+        <img src="{{ course.image.url }}" alt="">
+
+        <div class="info">
+            <h3>{{ course.title }}</h3>
+
+            {% if course.is_premium %}
+                <span class="badge premium">Premium</span>
+            {% else %}
+                <span class="badge free">Gratuit</span>
+            {% endif %}
+
+            <a href="{% url 'course_detail' course.id %}" class="btn-small">
+                Voir
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+
+/* ===== GLOBAL ===== */
+body {
+    background: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    color: #111;
+}
+
+.container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* HERO */
+.hero h1 {
+    font-size: 32px;
+}
+
+.hero p {
+    color: #666;
+}
+
+/* BUTTON */
+.btn-outline {
+    border: 1px solid #111;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #111;
+}
+
+/* CARD */
+.payment-card {
+    display: flex;
+    max-width: 800px;
+    margin: 40px auto;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* IMAGE */
+.card-image img {
+    width: 300px;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* CONTENT */
+.card-content {
+    padding: 25px;
+    text-align: left;
+    flex: 1;
+}
+
+.price {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.desc {
+    color: #666;
+}
+
+/* BENEFITS */
+.benefits {
+    margin: 15px 0;
+    padding-left: 15px;
+}
+
+.benefits li {
+    margin-bottom: 5px;
+}
+
+/* FORM */
+input[type="file"] {
+    margin: 10px 0;
+}
+
+.btn-main {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #ff7417;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-main:hover {
+    background: #ff820e;
+}
+
+/* MPESA */
+.mpesa {
+    margin-top: 20px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/* COURSES */
+.section-title {
+    text-align: center;
+    margin: 50px 0 20px;
+}
+
+.courses {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.course {
+    width: 200px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+}
+
+.course img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.info {
+    padding: 10px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 6px;
+    font-size: 0.7rem;
+    border-radius: 5px;
+    color: white;
+}
+
+.premium { background: black; }
+.free { background: #ff9408; }
+
+.btn-small {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 20px;
+    background: black;
+    color: white;
+    text-decoration: none;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .payment-card {
+        flex-direction: column;
+    }
+
+    .card-image img {
+        width: 100%;
+        height: 200px;
+    }
+}
+
+</style>
+
+{% endblock %}

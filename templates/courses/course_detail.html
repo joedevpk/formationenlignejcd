@@ -1,0 +1,368 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="course-container">
+
+  <!-- HEADER -->
+  <header class="course-header">
+    <h1>{{ course.title }}</h1>
+    <div class="course-rating">
+      <span class="avg">{{ average }}/5 ⭐</span>
+      <span class="total-reviews">({{ total_reviews }} avis)</span>
+    </div>
+  </header>
+
+  <!-- VIDEO SECTION -->
+  <section class="video-section">
+    {% if has_access %}
+      {% for lesson in course.lessons.all %}
+        <div class="video-card" data-lesson-id="{{ lesson.id }}">
+          <div class="video-wrapper">
+            <video id="v{{ lesson.id }}" playsinline>
+              <source src="{{ lesson.video.url }}" type="video/mp4">
+              Votre navigateur ne supporte pas la vidéo.
+            </video>
+            <div class="video-controls">
+              <button onclick="togglePlay({{ lesson.id }})" id="play-{{ lesson.id }}">▶️</button>
+              <button onclick="muteVideo({{ lesson.id }})" id="mute-{{ lesson.id }}">🔊</button>
+              <select onchange="changeSpeed({{ lesson.id }}, this.value)">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </div>
+            <div class="progress" id="p{{ lesson.id }}"></div>
+          </div>
+          <h3>{{ lesson.title }}</h3>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="locked">
+        <h2>🔒 Accès réservé</h2>
+        <a href="{% url 'plans' %}" class="btn-subscribe">S’abonner</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="reviews-section">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if not user_review and has_access %}
+      <form method="POST" class="review-form">
+        {% csrf_token %}
+        <label>Votre note :</label>
+        <select name="rating">
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+        </select>
+        <textarea name="comment" placeholder="Votre avis..." required></textarea>
+        <button type="submit" class="btn">Envoyer</button>
+      </form>
+    {% else %}
+      <p class="already">✅ Vous avez déjà commenté ou accès requis</p>
+    {% endif %}
+
+    <div class="reviews-list">
+      {% for review in reviews %}
+        <div class="review-card">
+          <div class="review-header">
+            <strong>{{ review.user.username }}</strong>
+            <div class="stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %} ★ {% else %} ☆ {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          <p>{{ review.comment }}</p>
+          <button type="button" class="btn-like" onclick="likeReview({{ review.id }})">
+            👍 <span id="likes-{{ review.id }}">{{ review.likes.count|default:0 }}</span>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TOP USERS -->
+  <aside class="top-users">
+    <h3>🏆 Top Reviewers</h3>
+    {% for user in top_reviewers %}
+      <p>{{ user.username }} ({{ user.total_reviews }})</p>
+    {% endfor %}
+  </aside>
+
+</div>
+
+<!-- MINI PLAYER FLOTTANT -->
+<div id="mini-player">
+  <div id="mini-player-header">
+    <span id="mini-player-title">Titre de la vidéo</span>
+    <button id="mini-close">❌</button>
+  </div>
+  <video id="mini-video" playsinline muted></video>
+  <div id="mini-controls">
+    <button id="mini-play">▶️</button>
+    <button id="mini-mute">🔊</button>
+    <select onchange="changeMiniSpeed(this.value)">
+      <option value="0.5">0.5x</option>
+      <option value="1" selected>1x</option>
+      <option value="1.5">1.5x</option>
+      <option value="2">2x</option>
+    </select>
+  </div>
+  <div id="mini-resize-handle"></div>
+</div>
+
+
+{% if has_access %}
+  <!-- Section Quiz motivante -->
+  <div class="quiz-motivation">
+    <h2>🔥 Testez vos connaissances ! 🔥</h2>
+
+    <div class="quiz-paragraph">
+      <p>Vous avez suivi toutes les leçons de ce cours ? Maintenant, mettez vos compétences à l'épreuve !</p>
+    </div>
+
+    <div class="quiz-paragraph">
+      <p>Chaque quiz vous aide à consolider ce que vous avez appris et à mesurer votre progression. 🎯</p>
+    </div>
+
+    <div class="quiz-paragraph">
+      <p>Défiez-vous et voyez si vous êtes prêt pour le prochain niveau ! 🚀</p>
+    </div>
+
+    <!-- Bouton pour lancer le quiz -->
+    {% if quizzes %}
+      <a href="{% url 'quiz_detail' quizzes.0.id %}" class="btn-quiz">Passer le quiz maintenant</a>
+    {% else %}
+      <p>Aucun quiz disponible pour ce cours pour le moment.</p>
+    {% endif %}
+  </div>
+{% endif %}
+
+<!-- STYLES -->
+<style>
+body { font-family:'Segoe UI', sans-serif; background:#121212; color:#fff; margin:0; padding:0; }
+.course-container { max-width:1000px; margin:auto; padding:15px; }
+.course-header { text-align:center; margin-bottom:30px; }
+.course-header h1 { font-size:2rem; margin-bottom:5px; }
+.course-rating { color:#aaa; font-size:0.9rem; }
+
+.video-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; margin-bottom:40px; }
+.video-card { background:#1e1e1e; border-radius:12px; overflow:hidden; }
+.video-wrapper { position:relative; border:1px solid #333; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; align-items:center; }
+.video-wrapper video { width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover; }
+.video-controls { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; background:#000; padding:5px; gap:5px; font-size:0.9rem; }
+.video-controls button { background:#ff8902; border:none; padding:5px 8px; border-radius:5px; cursor:pointer; }
+.video-controls select { background:#111; color:#fff; border:none; border-radius:5px; padding:4px; }
+.progress { position:absolute; bottom:0; left:0; height:4px; background:#ffa600; width:0%; transition:width 0.1s; }
+
+.locked { text-align:center; padding:40px; border:2px dashed #ff5555; border-radius:12px; }
+.btn-subscribe { background:#ffb006; color:#fff; padding:10px 20px; text-decoration:none; border-radius:25px; font-weight:bold; }
+
+.review-form select, .review-form textarea { width:100%; margin:8px 0; padding:10px; border-radius:8px; border:none; }
+.review-form button { background:#ffbb00; border:none; padding:10px 15px; border-radius:25px; font-weight:bold; cursor:pointer; }
+.review-card { background:#1e1e1e; padding:12px; border-radius:12px; margin-bottom:12px; }
+.review-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+.stars { color:rgb(255, 255, 255); }
+.btn-like { background:transparent; border:none; color:#ffa602; cursor:pointer; }
+.alert { background:#ff5555; padding:8px; margin:8px 0; border-radius:8px; }
+
+.top-users { background:#1e1e1e; padding:15px; border-radius:12px; margin-bottom:40px; }
+.top-users h3 { margin-bottom:10px; }
+
+/* MINI PLAYER */
+#mini-player {
+  position:fixed; bottom:15px; right:15px; width:280px; height:280px;
+  background:#1e1e1e; border-radius:12px; box-shadow:0 5px 20px rgba(0,0,0,0.7);
+  display:none; flex-direction:column; z-index:9999; overflow:hidden; cursor:move;
+}
+#mini-player.show { display:flex; opacity:1; }
+#mini-player.hide { opacity:0; }
+
+#mini-player-header { display:flex; justify-content:space-between; align-items:center; background:#000; padding:5px 10px; color:#ff9100; cursor:move; }
+#mini-player-header button { background:none; border:none; color:#ff8800; font-size:1rem; cursor:pointer; }
+#mini-player video { width:100%; height:100%; object-fit:cover; }
+#mini-controls { display:flex; justify-content:space-between; align-items:center; background:#000; padding:5px; font-size:0.9rem; }
+#mini-resize-handle { position:absolute; bottom:0; right:0; width:15px; height:15px; cursor:se-resize; background:#ff9a02; border-bottom-right-radius:12px; }
+
+/* MOBILE MINI PLAYER */
+@media(max-width:600px){
+  #mini-player{width:140px;height:140px;bottom:10px;right:10px;}
+  #mini-player-header{font-size:0.8rem;padding:3px 6px;}
+  #mini-resize-handle{display:none;}
+}
+
+
+/* quiz */
+.quiz-motivation {
+    background-color: #fff3e0;
+    border: 2px solid #000000;
+    padding: 25px;
+    border-radius: 15px;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.quiz-motivation h2 {
+    color: #ff8800;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.quiz-paragraph {
+    background-color: #fff8f0;
+    border-left: 4px solid #ff7a00;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.btn-quiz {
+    display: inline-block;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #494949, #ff7a00);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: 0.3s;
+    margin-top: 15px;
+}
+
+.btn-quiz:hover {
+    transform: scale(1.05);
+}
+
+</style>
+
+<!-- SCRIPTS -->
+<script>
+// ----------------------------
+// MAIN VIDEO CONTROLS
+// ----------------------------
+function togglePlay(id){
+  const video = document.getElementById('v'+id);
+  video.paused ? video.play() : video.pause();
+  document.getElementById('play-'+id).textContent = video.paused ? '▶️' : '⏸️';
+}
+function muteVideo(id){
+  const video = document.getElementById('v'+id);
+  video.muted = !video.muted;
+  document.getElementById('mute-'+id).textContent = video.muted ? '🔇' : '🔊';
+}
+function changeSpeed(id,speed){
+  document.getElementById('v'+id).playbackRate = parseFloat(speed);
+}
+
+// ----------------------------
+// LIKE REVIEW
+// ----------------------------
+function likeReview(id){
+  fetch(`/reviews/like/${id}/`,{
+    method:'POST',
+    headers:{'X-CSRFToken':getCookie('csrftoken')}
+  })
+  .then(res=>res.json())
+  .then(data=>document.getElementById('likes-'+id).innerText=data.likes)
+  .catch(err=>console.error(err));
+}
+function getCookie(name){
+  let v=null;
+  document.cookie.split(';').forEach(c=>{
+    if(c.trim().startsWith(name+'=')) v=c.split('=')[1];
+  });
+  return v;
+}
+
+// ----------------------------
+// MINI PLAYER
+// ----------------------------
+let currentMini = null;
+const mini = document.getElementById('mini-player');
+const miniVideo = document.getElementById('mini-video');
+
+function showMiniPlayer(video,title){
+  if(currentMini === video) return;
+  currentMini = video;
+  document.getElementById('mini-player-title').textContent = title;
+  miniVideo.src = video.currentSrc;
+  miniVideo.currentTime = video.currentTime;
+  miniVideo.playbackRate = video.playbackRate;
+  miniVideo.muted = video.muted;
+  mini.classList.add('show'); mini.classList.remove('hide');
+  miniVideo.play();
+}
+function hideMiniPlayer(){
+  mini.classList.add('hide'); mini.classList.remove('show');
+  miniVideo.pause();
+  miniVideo.src = '';
+  currentMini = null;
+}
+
+// Contrôles mini-player
+document.getElementById('mini-play').onclick = () => {
+  if(!currentMini) return;
+  currentMini.paused ? currentMini.play() : currentMini.pause();
+  document.getElementById('mini-play').textContent = currentMini.paused ? '▶️' : '⏸️';
+};
+document.getElementById('mini-mute').onclick = () => {
+  if(!currentMini) return;
+  currentMini.muted = !currentMini.muted;
+  document.getElementById('mini-mute').textContent = currentMini.muted ? '🔇' : '🔊';
+};
+document.getElementById('mini-close').onclick = hideMiniPlayer;
+function changeMiniSpeed(speed){
+  if(!currentMini) return;
+  currentMini.playbackRate = parseFloat(speed);
+  miniVideo.playbackRate = parseFloat(speed);
+}
+
+// ----------------------------
+// Mini-player scroll detection + progress
+// ----------------------------
+document.querySelectorAll('.video-wrapper video').forEach(video=>{
+  const id = video.id.replace('v','');
+  const title = video.closest('.video-card').querySelector('h3').textContent;
+  video.ontimeupdate = () => {
+    document.getElementById('p'+id).style.width = (video.currentTime/video.duration*100)+'%';
+    const rect = video.getBoundingClientRect();
+    if(rect.top < 0 && !video.paused){
+      showMiniPlayer(video,title);
+    } else if(currentMini === video && (video.paused || rect.top >= 0)){
+      hideMiniPlayer();
+    }
+  };
+});
+
+// ----------------------------
+// Drag MINI PLAYER (desktop only)
+// ----------------------------
+let isDragging=false, dragOffsetX=0, dragOffsetY=0;
+const header = document.getElementById('mini-player-header');
+header.addEventListener('mousedown', e=>{
+  if(window.innerWidth <= 600) return;
+  isDragging=true;
+  dragOffsetX=e.clientX-mini.offsetLeft;
+  dragOffsetY=e.clientY-mini.offsetTop;
+});
+document.addEventListener('mouseup', ()=>isDragging=false);
+document.addEventListener('mousemove', e=>{
+  if(!isDragging) return;
+  mini.style.left = (e.clientX - dragOffsetX)+'px';
+  mini.style.top = (e.clientY - dragOffsetY)+'px';
+  mini.style.bottom='auto';
+  mini.style.right='auto';
+});
+</script>
+
+{% endblock %}

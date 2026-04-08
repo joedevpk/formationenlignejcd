@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="auth-container">
+
+    <!-- TITRE -->
+    <h2>🔐 Connexion</h2>
+    <p class="subtitle">Accède à tes formations premium</p>
+    {% if messages %}
+        <div id="message-container">
+            {% for message in messages %}
+                <div class="toast {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- ERREUR -->
+    {% if error %}
+        <div class="error-box">{{ error }}</div>
+    {% endif %}
+
+    <!-- FORMULAIRE -->
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+
+                {% if field.errors %}
+                    <span class="error">{{ field.errors }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <!-- BOUTON -->
+        <button type="submit" class="btn-auth">
+            Se connecter
+        </button>
+    </form>
+
+    <!-- REDIRECT -->
+    <p class="auth-footer">
+        Pas encore de compte ? 
+        <a href="{% url 'register' %}">Créer un compte</a>
+    </p>
+
+</div>
+
+<style>
+/* ===== GLOBAL ===== */
+body {
+    background-color: #f5f5f5;
+    color: #111;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== notif success ===== */
+/* TOAST */
+#message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    background: #333;
+    color: #fff;
+    padding: 12px 18px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideIn 0.5s ease, fadeOut 0.5s ease 4s forwards;
+}
+
+/* SUCCESS */
+.toast.success {
+    background: #28a745;
+}
+
+/* ERROR */
+.toast.error {
+    background: #dc3545;
+}
+
+/* ANIMATION */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateX(100%); }
+}
+
+
+
+/* ===== CONTAINER ===== */
+.auth-container {
+    max-width: 420px;
+    margin: 60px auto;
+    background: #1a1a1a;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+/* TITRE */
+.auth-container h2 {
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+/* SOUS-TITRE */
+.subtitle {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 25px;
+}
+
+/* CHAMPS FORMULAIRE */
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+    color: #fff;
+}
+
+/* INPUTS */
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: #fff;
+    color: #111;
+    transition: 0.3s;
+}
+
+/* PLACEHOLDER */
+.form-group input::placeholder {
+    color: #888;
+}
+
+/* FOCUS */
+.form-group input:focus {
+    outline: none;
+    box-shadow: 0 0 5px #ff6600;
+}
+
+/* BOUTON */
+.btn-auth {
+    width: 100%;
+    background: linear-gradient(135deg, #ff5100, #ff640b);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn-auth:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.863);
+}
+
+/* ERREURS */
+.error {
+    color: #ff3c00;
+    font-size: 13px;
+}
+
+/* BOX ERREUR */
+.error-box {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    color: #ff3c00;
+}
+
+/* FOOTER */
+.auth-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.auth-footer a {
+    color: #ff7f06;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.auth-footer a:hover {
+    color: #ff7300;
+}
+
+/* RESPONSIVE */
+@media(max-width:480px){
+    .auth-container {
+        padding: 30px 20px;
+    }
+
+    .btn-auth {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
+
+</style>
+
+<script>
+    setTimeout(() => {
+        const container = document.getElementById("message-container");
+        if(container){
+            container.style.display = "none";
+        }
+    }, 5000); // disparaît après 5 secondes
+</script>
+
+{% endblock %}

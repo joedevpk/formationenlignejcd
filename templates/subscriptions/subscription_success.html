@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="pricing-container">
+
+    <!-- HERO SECTION -->
+    <h1> Merci pour ton abonnement !</h1>
+    <p class="subtitle">
+        Tu as maintenant accès à tous les cours premium.<br>
+        Commence à apprendre et développe tes compétences dès maintenant.
+    </p>
+
+    <!-- CARD DE CONFIRMATION -->
+    <div class="payment-card success-card">
+        <div class="icon-check">✔</div>
+        <h2>{{ plan.name }} activé !</h2>
+        <p>Accès complet pour <strong>{{ plan.duration_days }} jours</strong></p>
+
+        <!-- BOUTON VERS LES COURS -->
+        <a href="{% url 'home' %}" class="btn-plan">
+            Voir tous les cours
+        </a>
+
+        <p class="note">⚠️ L’accès aux cours sera activé après validation de ton paiement.</p>
+    </div>
+
+    <!-- GARANTIE -->
+    <div class="guarantee">
+        <p>🔒 Paiement sécurisé</p>
+        <p>⚡ Accès immédiat après validation</p>
+    </div>
+
+</div>
+
+<style>
+/* ===== GLOBAL ===== */
+body {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Container */
+.pricing-container {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.pricing-container h1 {
+    font-size: 36px;
+    margin-bottom: 15px;
+    color: #111;
+}
+
+.subtitle {
+    color: #555;
+    margin-bottom: 40px;
+    font-size: 1.1rem;
+}
+
+/* SUCCESS CARD */
+.success-card {
+    background: #ffffff; /* blanc */
+    color: #111; 
+    padding: 40px;
+    border-radius: 15px;
+    width: 380px;
+    margin: 0 auto 40px auto;
+    border: 3px solid #ff7b00; /* cadre vert */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.success-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.icon-check {
+    font-size: 80px;
+    color: #ff6702; /* vert */
+    margin-bottom: 20px;
+    animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.success-card h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.success-card p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.note {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 15px;
+}
+
+/* BOUTON */
+.btn-plan {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 30px;
+    background: #ff7d13; /* vert */
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-plan:hover {
+    transform: scale(1.05);
+    background: #ff5f02;
+}
+
+/* GARANTIE */
+.guarantee {
+    margin-top: 40px;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+    .success-card {
+        width: 95%;
+    }
+}
+</style>
+
+{% endblock %}

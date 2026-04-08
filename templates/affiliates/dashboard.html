@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="affiliate-container">
+
+    <!-- HEADER -->
+    <header class="affiliate-header">
+        <h1> Programme d’Affiliation 💰</h1>
+        <p class="subtitle">Gagne de l’argent simplement en partageant la plateforme </p>
+    </header>
+
+    <!-- CARD PRINCIPAL -->
+    <div class="card-main">
+        <h2>🔗 Ton lien de partage</h2>
+        <input id="refLink" value="{{ link }}" readonly>
+        <button onclick="copyLink()" class="btn-copy"> Copier le lien</button>
+        <p class="tip">Partage ce lien sur WhatsApp, Facebook, TikTok et gagne </p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-box">
+            <h3> Solde</h3>
+            <p id="affiliate-balance">{{ affiliate.balance }} $</p>
+        </div>
+        <div class="stat-box">
+            <h3> Gains totaux</h3>
+            <p>{{ commissions|length }}</p>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="actions">
+        <a href="{% url 'withdraw' %}" class="btn-primary"> Retirer l’argent</a>
+        <a href="{% url 'leaderboard' %}" class="btn-secondary"> Voir classement</a>
+    </div>
+
+    <!-- MOTIVATION -->
+    <div class="motivation">
+        <h3> Pourquoi utiliser l’affiliation ?</h3>
+        <p>✔ Gagne de l’argent sans investissement</p>
+        <p>✔ Partage simplement ton lien unique</p>
+        <p>✔ Plus tu invites, plus tu gagnes </p>
+        <p class="highlight"> Certains utilisateurs gagnent déjà chaque semaine !</p>
+    </div>
+
+    <!-- HISTORIQUE -->
+    <div class="history">
+        <h3> Historique des gains</h3>
+        {% for c in commissions %}
+            <div class="history-item">
+                💰 {{ c.amount }} $ - {{ c.created_at|date:"d M Y" }}
+            </div>
+        {% empty %}
+            <p>Aucune commission pour le moment</p>
+        {% endfor %}
+    </div>
+
+    <hr>
+
+    <!-- SECTION DEVIENS AFFILIÉ -->
+    <section class="affiliate-home-pro">
+        <h2> Deviens affilié et transforme tes compétences en revenu</h2>
+
+        <div class="affiliate-step">
+            <div class="icon">🌟</div>
+            <div class="content">
+                <p>
+                    L'affiliation te permet de générer des revenus passifs en partageant nos cours.
+                    Chaque inscription via ton lien te rapporte une commission.
+                </p>
+                <p>
+                    Que tu sois étudiant, formateur ou entrepreneur, tu peux monétiser tes recommandations
+                    tout en aidant d’autres à se former.
+                </p>
+            </div>
+        </div>
+
+        <h3>🛠 Comment ça fonctionne ?</h3>
+        <div class="affiliate-step"><div class="icon">1️⃣</div><div class="content"><p>Inscris-toi et active ton compte affilié.</p></div></div>
+        <div class="affiliate-step"><div class="icon">2️⃣</div><div class="content"><p>Partage ton lien sur les réseaux sociaux ou ton site web.</p></div></div>
+        <div class="affiliate-step"><div class="icon">3️⃣</div><div class="content"><p>Chaque nouvel utilisateur inscrit via ton lien te rapporte une commission.</p></div></div>
+
+        <h3>💡 Conseils pour maximiser tes gains</h3>
+        <div class="affiliate-step"><div class="icon">📢</div><div class="content"><p>Publie ton lien sur tes réseaux sociaux ou blog.</p></div></div>
+        <div class="affiliate-step"><div class="icon">📢</div><div class="content"><p>Crée des tutoriels ou recommandations de cours.</p></div></div>
+        <div class="affiliate-step"><div class="icon">📢</div><div class="content"><p>Suis tes performances sur ton dashboard affilié.</p></div></div>
+
+        <div class="affiliate-cta">
+            <a href="{% url 'affiliate_dashboard' %}" class="btn-dashboard">Commencer l'affiliation</a>
+        </div>
+    </section>
+
+</div>
+
+<script>
+function copyLink() {
+    const copyText = document.getElementById("refLink");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    alert("Lien copié !");
+}
+
+// Animation du solde
+function animateValue(id, start, end, duration) {
+    let obj = document.getElementById(id);
+    if(!obj) return;
+    let range = end - start;
+    let current = start;
+    let increment = end > start ? 1 : -1;
+    let stepTime = Math.max(Math.floor(duration / (range || 1)), 20);
+    let timer = setInterval(function() {
+        current += increment;
+        obj.innerText = current;
+        if (current === end) clearInterval(timer);
+    }, stepTime);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const balance = parseInt("{{ affiliate.balance|default:0 }}");
+    animateValue("affiliate-balance", 0, balance, 1000);
+});
+</script>
+
+<style>
+.affiliate-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 40px;
+    font-family: 'Segoe UI', sans-serif;
+    background: #fff;
+    border-radius: 15px;
+    border: 2px solid #ff7e06;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.affiliate-header h1 {font-size:2.5rem;color:#f56403;text-align:center;margin-bottom:10px;}
+.subtitle {text-align:center;color:gray;font-size:1.1rem;margin-bottom:30px;}
+
+/* CARD PRINCIPAL */
+.card-main {background:#111;color:#fff;padding:25px;border-radius:12px;margin-bottom:30px;text-align:center;}
+.card-main input {width:90%;padding:10px;margin:15px 0;border-radius:5px;border:none;font-size:1rem;}
+.btn-copy {background:#ff9203;color:#fff;border:none;padding:10px 20px;cursor:pointer;border-radius:5px;font-weight:bold;transition:0.3s;}
+.btn-copy:hover {transform:scale(1.05);}
+
+/* STATS */
+.stats {display:flex;justify-content:space-between;gap:20px;margin-bottom:30px;}
+.stat-box {flex:1;background:#f2f2f2;padding:25px;border-radius:12px;text-align:center;font-size:1.2rem;}
+
+/* ACTIONS */
+.actions {display:flex;justify-content:center;gap:15px;margin-bottom:30px;}
+.btn-primary {padding:12px 25px;border-radius:8px;font-weight:bold;text-decoration:none;background:rgb(255, 137, 3);color:#fff;}
+.btn-primary:hover {background:#ff9900;}
+.btn-secondary {padding:12px 25px;border-radius:8px;font-weight:bold;text-decoration:none;background:#111;color:#fff;}
+.btn-secondary:hover {background:#333;}
+
+/* MOTIVATION */
+.motivation {background:#fff4e6;padding:25px;border-radius:12px;margin-bottom:30px;font-size:1.1rem;}
+.highlight {color:#ff3c00;font-weight:bold;}
+
+/* HISTORIQUE */
+.history-item {background:#eee;padding:12px;margin-bottom:8px;border-radius:8px;}
+
+/* AFFILIATE HOME PRO */
+.affiliate-home-pro {padding:30px 0;}
+.affiliate-home-pro h2 {text-align:center;color:#fd5d00;margin-bottom:25px;}
+.affiliate-step {display:flex;align-items:flex-start;margin-bottom:15px;}
+.affiliate-step .icon {font-size:28px;margin-right:15px;}
+.affiliate-step .content p {margin:0; color:#555;}
+.affiliate-cta {text-align:center;margin-top:30px;}
+.btn-dashboard {background:#111;color:#fff;padding:15px 30px;border-radius:8px;text-decoration:none;font-weight:bold;transition:0.3s;}
+.btn-dashboard:hover {background:#333;transform:scale(1.05);}
+</style>
+
+{% endblock %}
