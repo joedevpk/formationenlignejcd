@@ -1,7 +1,14 @@
 from pathlib import Path
 import os
 import dj_database_url
+from django.contrib.auth import get_user_model
 
+if os.getenv("AUTO_SUPER_USER") == "True":
+    User = get_user_model()
+
+    if not User.objects.filter(username="joedevcodesgoat").exists():
+        User.objects.create_superuser("joedevcodesgoat", "joedepk@mail.com", "Charlie2006@")
+        
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
