@@ -21,7 +21,7 @@ def dashboard(request):
     #  importante ici aussi
     commissions = Commission.objects.filter(affiliate=request.user)
 
-    link = f"http://127.0.0.1:8000/?ref={affiliate.code}"
+    link = f"https://jdcformationenligne.onrender.com/?ref={affiliate.code}"
 
     return render(request, 'affiliates/dashboard.html', {
         'affiliate': affiliate,
