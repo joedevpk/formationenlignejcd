@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 import dj_database_url
-from django.contrib.auth import get_user_model
+
 
         
 # BASE DIR
@@ -140,14 +140,3 @@ CACHES = {
 }
 
 
-
-# Auto-create superuser for first deployment
-if os.getenv("AUTO_SUPER_USER") == "True":
-    User = get_user_model()
-
-    if not User.objects.filter(username="admin").exists():
-        User.objects.create_superuser(
-            username="joedevcodesgoat",
-            email="joedevpk@mail.com",
-            password="Charlie2006"
-        )
