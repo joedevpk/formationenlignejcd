@@ -2,6 +2,10 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
+from cloudinary.models import CloudinaryField
+
+
+
 
 User = settings.AUTH_USER_MODEL
 
@@ -20,8 +24,8 @@ class Subscription(models.Model):
     """Abonnement d'un utilisateur à un plan"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
-    
-    proof = models.ImageField(upload_to='proofs/', blank=True, null=True)  # capture paiement
+    proof = CloudinaryField('proof', blank=True, null=True)
+    #proof = CloudinaryField(upload_to='proofs/', blank=True, null=True)  # capture paiement
     amount = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
     STATUS_CHOICES = [
