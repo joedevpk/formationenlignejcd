@@ -4,6 +4,7 @@ import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import cloudinary
 
 
         
@@ -103,14 +104,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-}
+cloudinary.config(
+  cloud_name = "dl34whfq6",
+  api_key = "478982915317468",
+  api_secret = "j9SsY0tXDdUsPsGeCZCoRFCl1bw"
+)
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 
 # LANGUAGE
 LANGUAGE_CODE = 'fr'
