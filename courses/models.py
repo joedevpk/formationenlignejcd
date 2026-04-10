@@ -1,18 +1,16 @@
 from django.db import models
 from django.conf import settings
+from cloudinary.models import CloudinaryField
 
 User = settings.AUTH_USER_MODEL
 
 
-# =========================
-#  COURSE
-# =========================
+
 class Course(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
 
-    # image optionnelle pour éviter erreurs
-    image = models.ImageField(upload_to='courses/', blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
 
     instructor = models.ForeignKey(
         User,
@@ -27,9 +25,7 @@ class Course(models.Model):
         return self.title
 
 
-# =========================
-#  LESSON
-# =========================
+
 class Lesson(models.Model):
     course = models.ForeignKey(
         Course,
@@ -39,11 +35,9 @@ class Lesson(models.Model):
 
     title = models.CharField(max_length=255)
 
-    # vidéo optionnelle (évite crash admin)
-    video = models.FileField(upload_to='lessons/', blank=True, null=True)
+    video = CloudinaryField(resource_type="video", blank=True, null=True)
 
     content = models.TextField(blank=True)
-
     order = models.PositiveIntegerField(default=0)
 
     is_popular = models.BooleanField(default=False)
@@ -55,9 +49,8 @@ class Lesson(models.Model):
         ordering = ['order']   #  IMPORTANT (ordre automatique)
 
 
-# =========================
 #  PROGRESSION VIDÉO
-# =========================
+
 class LessonProgress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
