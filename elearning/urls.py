@@ -31,12 +31,9 @@ urlpatterns = [
     path('notifications/', include('notifications.urls')),
     path('quiz/', include('quiz.urls')),
     path('affiliates/', include('affiliates.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-"""""
-# pour afficher images/videos
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-"""

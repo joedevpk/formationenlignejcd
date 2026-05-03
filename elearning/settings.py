@@ -18,6 +18,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # APPS
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,11 +35,13 @@ INSTALLED_APPS = [
     'subscriptions',
     'reviews',
     'notifications',
-    'channels',
     'quiz',
     'affiliates',
     'cloudinary',
     'cloudinary_storage',
+    'channels',
+    'chat',
+    
 ]
 
 # MIDDLEWARE
@@ -75,12 +78,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'elearning.wsgi.application'
 ASGI_APPLICATION = 'elearning.asgi.application'
 
+
 # CHANNELS (notifications)
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
+
+
 
 # DATABASE (AUTO SWITCH LOCAL / PRODUCTION)
 if os.getenv("DATABASE_URL"):
@@ -124,6 +130,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # MEDIA
 MEDIA_URL = '/media/'

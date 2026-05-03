@@ -8,23 +8,28 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
         if user.is_anonymous:
             await self.close()
-        else:
-            self.group_name = f"user_{user.id}"
+            return
 
-            await self.channel_layer.group_add(
-                self.group_name,
-                self.channel_name
-            )
+        self.user = user
+        self.group_name = f"user_{user.id}"
 
-            await self.accept()
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
+        await self.channel_layer.group_add(
             self.group_name,
             self.channel_name
         )
 
-    async def send_notification(self, event):
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        if hasattr(self, "group_name"):
+            await self.channel_layer.group_discard(
+                self.group_name,
+                self.channel_name
+            )
+
+    # 📩 RECEIVER from group_send
+    async def notification_message(self, event):
         await self.send(text_data=json.dumps({
-            "message": event["message"]
+            "message": event.get("message", ""),
+            "type": event.get("type", "info")
         }))

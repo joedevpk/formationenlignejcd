@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Joe Dev Academy{% endblock %}</title>
     {% load static %}
-
+    
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -304,6 +305,12 @@ body.dark {
         </a>
 
         <a href="{% url 'home' %}">Accueil</a>
+        
+        {% if user.is_authenticated %}
+        <a href="{% url 'chat' user.id %}" class="btn-chat">
+           💬 Discuter
+        </a>
+        {% endif %}
 
         {% if request.user.is_authenticated %}
             <a href="{% url 'plans' %}" class="btn">💎 S'abonner</a>
@@ -852,6 +859,14 @@ document.querySelector(".notif-link").addEventListener("click", function(){
     .then(() => updateNotifCount());
 });
 
+
+//verification
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/static/js/service-worker.js')
+    .then(function() {
+        console.log("Service Worker activé");
+    });
+}
 
 </script>
 

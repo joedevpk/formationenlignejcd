@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="chat-wrapper">
+
+<!-- HEADER -->
+<div class="chat-header">
+    <div>
+        <h3>{{ other_user.username }}</h3>
+        <span id="status" class="status">🟢 En ligne</span>
+    </div>
+</div>
+
+<!-- CHAT BOX -->
+<div id="chat-box" class="chat-box">
+
+{% for msg in messages %}
+<div class="msg {% if msg.sender == request.user %}sent{% else %}received{% endif %}">
+
+    {% if msg.content %}
+        <p>{{ msg.content }}</p>
+    {% endif %}
+
+    {% if msg.file %}
+        <audio controls class="audio-player">
+            <source src="{{ msg.file.url }}">
+        </audio>
+    {% endif %}
+
+    <span class="time">
+        {{ msg.timestamp|time:"H:i" }}
+        {% if msg.sender == request.user %}✔✔{% endif %}
+    </span>
+
+</div>
+{% endfor %}
+
+</div>
+
+<!-- INPUT -->
+<div class="chat-input">
+
+    <input type="text" id="messageInput" placeholder="Message...">
+
+    <input type="file" id="audioFile" accept="audio/*" hidden>
+
+    <button onclick="document.getElementById('audioFile').click()">📎</button>
+
+    <button id="recordBtn">🎤</button>
+
+    <button onclick="sendMessage()">➤</button>
+
+</div>
+
+</div>
+
+<style>
+
+/* SAME STYLE (optimisé) */
+.chat-wrapper{
+    max-width:750px;
+    margin:auto;
+    height:92vh;
+    display:flex;
+    flex-direction:column;
+    background:#f5f7fb;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 5px 25px rgba(0,0,0,0.1);
+}
+
+.chat-header{
+    background:linear-gradient(45deg,#ff7a00,#ff9a3c);
+    color:white;
+    padding:15px;
+}
+
+.chat-box{
+    flex:1;
+    padding:15px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.msg{
+    max-width:65%;
+    padding:12px;
+    border-radius:18px;
+    animation:fadeIn .2s ease;
+}
+
+.sent{
+    background:#dcf8c6;
+    align-self:flex-end;
+}
+
+.received{
+    background:white;
+    align-self:flex-start;
+}
+
+.time{
+    font-size:10px;
+    color:#666;
+}
+
+.chat-input{
+    display:flex;
+    align-items:center;
+    padding:10px;
+    background:white;
+    gap:8px;
+}
+
+.chat-input input{
+    flex:1;
+    padding:12px;
+    border-radius:25px;
+    border:1px solid #ddd;
+}
+
+.chat-input button{
+    background:#ff7a00;
+    border:none;
+    color:white;
+    padding:10px;
+    border-radius:50%;
+}
+
+</style>
+
+<script>
+const socket = new WebSocket(
+    (window.location.protocol === "https:" ? "wss://" : "ws://") +
+    window.location.host +
+    "/ws/chat/{{ other_user.id }}/"
+);
+
+const chatBox = document.getElementById("chat-box");
+const status = document.getElementById("status");
+
+const myUsername = "{{ request.user.username }}";
+
+/* ================= RECEIVE ================= */
+socket.onmessage = function(e){
+    const data = JSON.parse(e.data);
+
+    if(data.typing){
+        status.innerText = "✍️ en train d'écrire...";
+        setTimeout(()=> status.innerText = "🟢 En ligne", 1500);
+        return;
+    }
+
+    addMessage(data);
+};
+
+/* ================= ADD MESSAGE ================= */
+function addMessage(data){
+
+    const div = document.createElement("div");
+    div.classList.add("msg");
+
+    const isMe = data.sender === myUsername;
+    div.classList.add(isMe ? "sent" : "received");
+
+    let content = "";
+
+    // TEXT
+    if(data.message){
+        content += `<p>${data.message}</p>`;
+    }
+
+    // AUDIO
+    if(data.file_url && data.file_type && data.file_type.includes("audio")){
+        content += `
+            <audio controls>
+                <source src="${data.file_url}">
+            </audio>
+        `;
+    }
+
+    // IMAGE
+    if(data.file_url && data.file_type && data.file_type.includes("image")){
+        content += `
+            <img src="${data.file_url}" style="max-width:200px;border-radius:10px;">
+        `;
+    }
+
+    // FILE
+    if(data.file_url && data.file_type && 
+       !data.file_type.includes("audio") && 
+       !data.file_type.includes("image")){
+        content += `
+            <a href="${data.file_url}" target="_blank">📎 fichier</a>
+        `;
+    }
+
+    div.innerHTML = `
+        ${content}
+        <span class="time">${data.time || "now"}</span>
+    `;
+
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+/* ================= SEND TEXT ================= */
+function sendMessage(){
+
+    const input = document.getElementById("messageInput");
+    const msg = input.value.trim();
+
+    if(!msg) return;
+
+    socket.send(JSON.stringify({
+        message: msg,
+        sender: myUsername
+    }));
+
+    input.value = "";
+}
+
+/* ENTER */
+document.getElementById("messageInput").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+});
+
+/* ================= FILE UPLOAD ================= */
+document.getElementById("audioFile").addEventListener("change", function(){
+
+    const file = this.files[0];
+    if(!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    fetch("/upload-file/", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        socket.send(JSON.stringify({
+            message: "",
+            file_url: data.file_url,
+            file_type: data.file_type,
+            sender: myUsername,
+            time: "now"
+        }));
+    });
+});
+
+
+/* ================= VOICE RECORD (FIX COMPLET) ================= */
+let mediaRecorder;
+let audioChunks = [];
+let isRecording = false;
+
+document.getElementById("recordBtn").onclick = async function () {
+
+    if (!isRecording) {
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.start();
+
+        isRecording = true;
+        this.innerText = "⏹";
+
+        audioChunks = [];
+
+        mediaRecorder.ondataavailable = function (e) {
+            audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = async function () {
+
+            const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+
+            const formData = new FormData();
+            formData.append("file", audioBlob, "voice.webm");
+
+            const res = await fetch("/upload-file/", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            });
+
+            const data = await res.json();
+
+            socket.send(JSON.stringify({
+                message: "",
+                file_url: data.file_url,
+                file_type: "audio/webm",
+                sender: myUsername,
+                time: "now"
+            }));
+        };
+
+    } else {
+        mediaRecorder.stop();
+        isRecording = false;
+        this.innerText = "🎤";
+    }
+};
+
+</script>
+{% endblock %}

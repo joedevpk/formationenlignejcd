@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="chat-list-wrapper">
+
+    <!-- HEADER -->
+    <div class="chat-list-header">
+        <h2>💬 Conversations</h2>
+        <p>Vos discussions récentes</p>
+    </div>
+
+    <!-- LIST -->
+    <div class="chat-list">
+
+        {% for user in users %}
+        <a href="{% url 'chat' user.id %}" class="chat-card">
+
+            <!-- AVATAR -->
+            <div class="avatar">
+                {{ user.username|first|upper }}
+            </div>
+
+            <!-- INFO -->
+            <div class="chat-info">
+                <h4>{{ user.username }}</h4>
+                <p>👉 Cliquez pour commencer la discussion</p>
+            </div>
+
+            <!-- STATUS -->
+            <div class="status-dot"></div>
+
+        </a>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<style>
+
+/* WRAPPER */
+.chat-list-wrapper{
+    max-width:800px;
+    margin:auto;
+    padding:20px;
+    font-family:Arial, sans-serif;
+}
+
+/* HEADER */
+.chat-list-header{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.chat-list-header h2{
+    font-size:28px;
+    color:#ff7a00;
+}
+
+.chat-list-header p{
+    color:#777;
+}
+
+/* LIST */
+.chat-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+/* CARD */
+.chat-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    text-decoration:none;
+    color:black;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    transition:0.2s;
+}
+
+.chat-card:hover{
+    transform:scale(1.02);
+    background:#f9f9f9;
+}
+
+/* AVATAR */
+.avatar{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:linear-gradient(45deg,#ff7a00,#ff9a3c);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-weight:bold;
+    font-size:18px;
+}
+
+/* INFO */
+.chat-info{
+    flex:1;
+    margin-left:15px;
+}
+
+.chat-info h4{
+    margin:0;
+    font-size:16px;
+}
+
+.chat-info p{
+    margin:0;
+    font-size:12px;
+    color:#777;
+}
+
+/* STATUS */
+.status-dot{
+    width:10px;
+    height:10px;
+    background:#00c851;
+    border-radius:50%;
+    box-shadow:0 0 8px #00c851;
+}
+
+</style>
+
+{% endblock %}
