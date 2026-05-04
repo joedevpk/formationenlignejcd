@@ -14,7 +14,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="manifest" href="/static/manifest.json">  
     <meta name="theme-color" content="#ff6600">
-       
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/js/service-worker.js')
+    .then(() => console.log("SW enregistré"))
+    .catch(err => console.log("SW erreur", err));
+}
+</script>     
 <style>
 
 /* ===== GLOBAL ===== */
@@ -868,11 +874,6 @@ document.querySelector(".notif-link").addEventListener("click", function(){
 
 //verification
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/static/js/service-worker.js')
-  .then(reg => console.log("SW OK", reg))
-  .catch(err => console.log("SW ERROR", err));
-}
 </script>
 
 </body>
