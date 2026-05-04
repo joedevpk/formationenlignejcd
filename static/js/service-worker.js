@@ -2,17 +2,21 @@ const CACHE_NAME = "jdc-academy-v1";
 
 const urlsToCache = [
   "/",
-  "/static/css/style.css",
-  "/static/js/main.js"
+  "/static/css/style.css"
 ];
 
 // INSTALL
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
+    caches.open(CACHE_NAME).then(async cache => {
+      try {
+        await cache.addAll(urlsToCache);
+      } catch (err) {
+        console.log("Cache error:", err);
+      }
     })
   );
+  self.skipWaiting();
 });
 
 // ACTIVATE
@@ -28,13 +32,16 @@ self.addEventListener("activate", event => {
       );
     })
   );
+  self.clients.claim();
 });
 
 // FETCH
 self.addEventListener("fetch", event => {
   event.respondWith(
     caches.match(event.request).then(response => {
-      return response || fetch(event.request);
+      return response || fetch(event.request).catch(() => {
+        return caches.match("/");
+      });
     })
   );
 });
