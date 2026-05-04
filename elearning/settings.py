@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'accounts',
     'courses',
     'dashboard',
-    'captcha',
     'crispy_forms',
     'crispy_bootstrap5',
     'subscriptions',
