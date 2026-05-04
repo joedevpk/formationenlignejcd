@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+
+    {% load static %}
+
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#ff6600">
+
+    <link rel="apple-touch-icon" href="{% static 'icons/icon-192.png' %}">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Joe Dev Academy{% endblock %}</title>
-    {% load static %}
     
-    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
-    <link rel="manifest" href="/static/manifest.json">  
-    <meta name="theme-color" content="#ff6600">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -16,11 +20,14 @@
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/static/js/service-worker.js')
-    .then(() => console.log("SW enregistré"))
-    .catch(err => console.log("SW erreur", err));
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register("{% static 'js/service-worker.js' %}")
+      .then(() => console.log("SW OK"))
+      .catch(err => console.log("SW ERROR", err));
+  });
 }
-</script>     
+</script>
+     
 <style>
 
 /* ===== GLOBAL ===== */
