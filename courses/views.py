@@ -106,6 +106,7 @@ def home(request):
         avg_rating=Avg('reviews__rating'),
         total_reviews=Count('reviews')
     ).order_by('-avg_rating')[:6]
+    
 
     #  Quiz populaire pour la Home
     popular_quiz = Quiz.objects.order_by('-id').first()  # le plus récent ou le plus joué

@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-jdcgoatmmajoe20052009")
 DEBUG = os.getenv("DEBUG", "True") == "True"
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
+#ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # APPS
 INSTALLED_APPS = [
@@ -79,7 +79,7 @@ ASGI_APPLICATION = 'elearning.asgi.application'
 
 
 # CHANNELS (notifications)
-
+"""
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -88,7 +88,7 @@ CHANNEL_LAYERS = {
         },
     },
 }
-
+"""
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -119,9 +119,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+  cloud_name = "dl34whfq6",
+  api_key = "478982915317468",
+  api_secret = "j9SsY0tXDdUsPsGeCZCoRFCl1bw"
 )
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
