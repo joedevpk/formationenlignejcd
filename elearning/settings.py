@@ -79,6 +79,7 @@ ASGI_APPLICATION = 'elearning.asgi.application'
 
 
 # CHANNELS (notifications)
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
