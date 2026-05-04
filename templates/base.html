@@ -867,9 +867,11 @@ document.querySelector(".notif-link").addEventListener("click", function(){
 
 
 //verification
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/static/js/service-worker.js")
-    .then(() => console.log("SW actif"));
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/js/service-worker.js')
+  .then(reg => console.log("SW OK", reg))
+  .catch(err => console.log("SW ERROR", err));
 }
 </script>
 
