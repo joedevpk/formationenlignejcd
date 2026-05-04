@@ -82,10 +82,12 @@ ASGI_APPLICATION = 'elearning.asgi.application'
 # CHANNELS (notifications)
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.getenv("REDIS_URL")],
+        },
     },
 }
-
 
 
 # DATABASE (AUTO SWITCH LOCAL / PRODUCTION)
