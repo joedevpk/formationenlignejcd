@@ -131,6 +131,16 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://jdcformationenligne.onrender.com"
+]
+
+ALLOWED_HOSTS = [
+    "jdcformationenligne.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
+
 # STATIC FILES (IMPORTANT)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
