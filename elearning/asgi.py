@@ -7,18 +7,20 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'elearning.settings')
 
 django_asgi_app = get_asgi_application()
 
-# IMPORT SAFE (évite crash Render)
-try:
-    import chat.routing
-    chat_ws = chat.routing.websocket_urlpatterns
-except Exception:
-    chat_ws = []
+chat_ws = []
+notif_ws = []
 
 try:
-    import notifications.routing
-    notif_ws = notifications.routing.websocket_urlpatterns
+    from chat import routing as chat_routing
+    chat_ws = chat_routing.websocket_urlpatterns
 except Exception:
-    notif_ws = []
+    pass
+
+try:
+    from notifications import routing as notif_routing
+    notif_ws = notif_routing.websocket_urlpatterns
+except Exception:
+    pass
 
 application = ProtocolTypeRouter({
     "http": django_asgi_app,
