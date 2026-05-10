@@ -115,6 +115,8 @@
     </div>
 
 </section>
+
+
 <style>
 
 .affiliate-clean {
@@ -251,15 +253,22 @@
     display: flex;
     align-items: center;
     overflow: hidden;
-    background: #f7f9fa;
+    background: #ffffff;
 }
 
 /* BACKGROUND IMAGE */
 .hero-bg {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f") center/cover no-repeat;
+    background:
+    url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f")
+    center center/cover no-repeat;
+
+    background-attachment: fixed;
+
     transform: scale(1.05);
 }
 
@@ -417,8 +426,6 @@
         justify-content: center;
     }
 }
-
-
 
 
 
@@ -702,8 +709,6 @@
 
 
 
-
-
 /* SECTION */
 .statistics {
     position: relative;
@@ -913,41 +918,200 @@
 
 
 
-.why-section {
-    padding: 90px 10%;
-    background: #f7f9fa;
+
+/* =========================
+   WHY SECTION
+========================= */
+
+.why-section{
+    padding: 100px 8%;
+    background: #f7f9fc;
+}
+
+/* CONTAINER */
+.why-container{
+    max-width: 1300px;
+    margin: auto;
+}
+
+/* TOP */
+.why-top{
     text-align: center;
+    max-width: 800px;
+    margin: auto auto 70px;
 }
 
-.why-section h2 {
-    font-size: 2.2rem;
-    margin-bottom: 40px;
+/* MINI TAG */
+.mini-tag{
+    display: inline-block;
+
+    padding: 10px 22px;
+
+    background: rgba(164,53,240,0.08);
+
+    color: #a435f0;
+
+    border-radius: 40px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    margin-bottom: 25px;
+}
+
+/* TITLE */
+.why-top h2{
+    font-size: 3rem;
+    line-height: 1.3;
     color: #1c1d1f;
+    margin-bottom: 20px;
+    font-weight: 800;
 }
 
-.why-grid {
+/* TEXT */
+.why-top p{
+    color: #6a6f73;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* GRID */
+.why-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 30px;
 }
 
-.why-card {
+/* CARD */
+.why-card{
     background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    transition: 0.3s;
-    text-align: left;
+
+    padding: 40px 35px;
+
+    border-radius: 28px;
+
+    position: relative;
+
+    transition: 0.4s;
+
+    border:
+    1px solid rgba(0,0,0,0.05);
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,0.05);
 }
 
-.why-card:hover {
-    transform: translateY(-6px);
+/* Hover */
+.why-card:hover{
+    transform: translateY(-10px);
+
+    box-shadow:
+    0 18px 40px rgba(0,0,0,0.08);
 }
 
-.why-card h3 {
-    margin-bottom: 10px;
+/* TOP BORDER */
+.why-card::before{
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 5px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #a435f0,
+        #8710d8
+    );
+
+    border-radius: 28px 28px 0 0;
 }
 
+/* NUMBER */
+.number{
+    width: 55px;
+    height: 55px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #a435f0,
+        #8710d8
+    );
+
+    color: white;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1rem;
+    font-weight: bold;
+
+    margin-bottom: 25px;
+
+    box-shadow:
+    0 10px 25px rgba(164,53,240,0.3);
+}
+
+/* TITLE */
+.why-card h3{
+    color: #1c1d1f;
+
+    font-size: 1.5rem;
+
+    margin-bottom: 15px;
+
+    font-weight: 700;
+}
+
+/* TEXT */
+.why-card p{
+    color: #6a6f73;
+
+    line-height: 1.8;
+
+    font-size: 0.98rem;
+}
+
+/* RESPONSIVE */
+@media(max-width:991px){
+
+    .why-top h2{
+        font-size: 2.4rem;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .why-section{
+        padding: 80px 20px;
+    }
+
+    .why-top{
+        margin-bottom: 50px;
+    }
+
+    .why-top h2{
+        font-size: 2rem;
+    }
+
+    .why-top p{
+        font-size: 1rem;
+    }
+
+    .why-card{
+        padding: 35px 25px;
+    }
+
+}
 
 
 
@@ -1059,33 +1223,71 @@
 
 
 <!-- COURSES -->
-    <section id="courses">
+<section id="courses" class="courses-section">
+
+    <div class="section-header">
         <h2>Cours disponibles</h2>
-        <div class="courses">
-            {% for course in courses %}
-            <div class="card interactive-box">
-                {% if course.is_popular %}
-                    <div class="badge">Populaire</div>
-                {% elif course.is_new %}
-                    <div class="badge">Nouveau</div>
-                {% endif %}
+        <p class="subtitle">Commence ton apprentissage étape par étape</p>
+    </div>
+
+    <div class="courses-grid">
+
+        {% for course in courses %}
+
+        <div class="course-card">
+
+            <!-- IMAGE -->
+            <div class="course-image-box">
 
                 {% if course.image %}
-                    <img src="{{ course.image.url }}" alt="{{ course.title }}" class="course-image" />
+                    <img src="{{ course.image.url }}" class="course-image">
                 {% else %}
-                    <img src="/static/images/default-course.png" alt="Image par défaut" class="course-image" />
+                    <img src="/static/images/default-course.png" class="course-image">
                 {% endif %}
 
-                <h3>{{ course.title }}</h3>
-                <p class="price">{{ course.price }} $</p>
-                <p class="desc">{{ course.description|truncatewords:20 }}</p>
-                <a href="{% url 'course_detail' course.id %}" class="btn">Voir le cours</a>
+                <!-- FAVORIS -->
+                <div class="favorite">❤️</div>
+
+                <!-- BADGE -->
+                {% if course.is_popular %}
+                    <span class="badge">🔥 Populaire</span>
+                {% elif course.is_new %}
+                    <span class="badge">🆕 Nouveau</span>
+                {% endif %}
+
+                <!-- PLAY BUTTON -->
+                <a href="{% url 'course_detail' course.id %}" class="play-button">
+                    ▶
+                </a>
+
             </div>
-            {% empty %}
-            <p>Aucun cours disponible.</p>
-            {% endfor %}
+
+            <!-- CONTENT -->
+            <div class="course-content">
+
+                <h3><strong>{{ course.title }}</strong></h3>
+
+                <p class="price"><strong>{{ course.price }} $</strong></p>
+
+                <p class="desc">
+                    <strong>{{ course.description|truncatewords:18 }}</strong>
+                </p>
+
+                <!-- ORIENTATION TEXTE -->
+                <p class="orientation">
+                    <strong>👉 Cliquez sur ▶ pour commencer le cours</strong>
+                </p>
+
+            </div>
+
         </div>
-    </section>
+
+        {% empty %}
+            <p>Aucun cours disponible.</p>
+        {% endfor %}
+
+    </div>
+</section>
 
 
 <section class="statistics">
@@ -1162,32 +1364,90 @@
 </section>
 
 
+<!-- =========================
+     WHY SECTION UDEMY STYLE
+========================= -->
+
 <section class="why-section">
 
-    <div class="container">
+    <div class="why-container">
 
-        <h2>Pourquoi choisir Joe Dev Academy ?</h2>
+        <!-- TOP -->
+        <div class="why-top">
 
+            <span class="mini-tag">
+                Pourquoi choisir JDC Academy
+            </span>
+
+            <h2>
+                Une plateforme moderne pour apprendre
+                les compétences du futur
+            </h2>
+
+            <p>
+                Développez vos compétences avec des formations pratiques,
+                des projets réels et un accompagnement professionnel.
+            </p>
+
+        </div>
+
+        <!-- GRID -->
         <div class="why-grid">
 
+            <!-- CARD -->
             <div class="why-card">
-                <h3> Apprentissage pratique</h3>
-                <p>Des cours orientés projets réels pour apprendre efficacement.</p>
+
+                <div class="number">01</div>
+
+                <h3>Apprentissage pratique</h3>
+
+                <p>
+                    Des formations orientées projets réels pour maîtriser
+                    rapidement les compétences essentielles.
+                </p>
+
             </div>
 
+            <!-- CARD -->
             <div class="why-card">
-                <h3> Accès illimité</h3>
-                <p>Apprends à ton rythme sans limite ni restriction.</p>
+
+                <div class="number">02</div>
+
+                <h3>Accès illimité</h3>
+
+                <p>
+                    Regardez les cours à votre rythme depuis mobile,
+                    tablette ou ordinateur sans restriction.
+                </p>
+
             </div>
 
+            <!-- CARD -->
             <div class="why-card">
-                <h3>💻 Compétences demandées</h3>
-                <p>Développement web, Python, Django et business digital.</p>
+
+                <div class="number">03</div>
+
+                <h3>Compétences recherchées</h3>
+
+                <p>
+                    Python, Django, développement web et business digital
+                    pour le marché moderne.
+                </p>
+
             </div>
 
+            <!-- CARD -->
             <div class="why-card">
-                <h3>📈 Objectif réussite</h3>
-                <p>Te préparer à créer des opportunités dans le digital.</p>
+
+                <div class="number">04</div>
+
+                <h3>Objectif réussite</h3>
+
+                <p>
+                    Construisez votre avenir digital avec des compétences
+                    concrètes et professionnelles.
+                </p>
+
             </div>
 
         </div>
@@ -1197,322 +1457,810 @@
 </section>
 
 
+<!-- =========================
+     QUIZ HERO ULTRA PRO
+========================= -->
+
 <div class="home-quiz-section">
 
-    <h2> Quiz du jour</h2>
+    <div class="quiz-overlay"></div>
 
-    <div class="home-quiz-badge">
-        🏆 Top Score :
-        <span>{{ top_quiz_score|default:"Aucun score pour l'instant" }}</span>
-    </div>
+    <div class="quiz-content">
 
-    <p class="quiz-text">
-        Teste tes connaissances et débloque des badges exclusifs !
-    </p>
+        <span class="quiz-badge-top">
+            Quiz du jour
+        </span>
 
-    <p class="quiz-text">
-        Mesure ta progression et compare-toi aux meilleurs élèves !
-    </p>
+        <h2>
+            Teste tes compétences et monte dans le classement
+        </h2>
 
-    {% if popular_quiz %}
+        <div class="home-quiz-badge">
+            🏆 Top Score :
+            <span>{{ top_quiz_score|default:"Aucun score pour l'instant" }}</span>
+        </div>
+
+        <p class="quiz-text">
+            Débloque des badges, améliore ton niveau et deviens un expert.
+        </p>
+
+        <p class="quiz-text">
+            Compare tes résultats avec les meilleurs étudiants de la plateforme.
+        </p>
+
+        {% if popular_quiz %}
         <a href="{% url 'quiz_detail' popular_quiz.id %}" class="btn-home-quiz">
-             Passer le quiz maintenant
+            Lancer le quiz
         </a>
-    {% else %}
-        <p>Aucun quiz disponible pour le moment.</p>
-    {% endif %}
+        {% else %}
+        <p class="no-quiz">Aucun quiz disponible pour le moment.</p>
+        {% endif %}
+
+    </div>
 
 </div>
 
-<!-- CTA GLOBAL -->
+<!-- =========================
+     CTA ULTRA MODERNE
+========================= -->
+
 <section class="cta-quiz">
 
-    <p>Rejoins la plateforme et développe tes compétences dès aujourd’hui.</p>
+    <!-- Overlay -->
+    <div class="cta-overlay"></div>
 
-    <a href="/subscriptions/plans/" class="btn-cta">
-        S’abonner maintenant
-    </a>
+    <!-- Content -->
+    <div class="cta-content">
+
+        <span class="cta-badge">
+            Formation Premium
+        </span>
+
+        <h2>
+            Transforme ton avenir avec
+            <span>JDC Academy</span>
+        </h2>
+
+        <p>
+            Rejoins des étudiants motivés et apprends le développement web,
+            Python, Django et les compétences digitales les plus recherchées.
+        </p>
+
+        <!-- Buttons -->
+        <div class="cta-buttons">
+
+            <a href="/subscriptions/plans/" class="btn-cta-primary">
+                 Commencer maintenant
+            </a>
+
+            <a href="#courses" class="btn-cta-secondary">
+                 Explorer les cours
+            </a>
+
+        </div>
+
+        <!-- Stats -->
+        <div class="cta-stats">
+
+            <div class="stat-box">
+                <h3>+500</h3>
+                <span>Étudiants</span>
+            </div>
+
+            <div class="stat-box">
+                <h3>+50</h3>
+                <span>Formations</span>
+            </div>
+
+            <div class="stat-box">
+                <h3>95%</h3>
+                <span>Satisfaction</span>
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
 
 
 <style>
+    /* =========================
+   GLOBAL
+========================= */
 
- 
-/* ===== SECTION QUIZ AVEC IMAGE ===== */
-.home-quiz-section {
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:#0f1117;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#a435f0;
+    border-radius:20px;
+}
+
+
+
+/* =========================
+   QUIZ ULTRA PRO
+========================= */
+
+.home-quiz-section{
     position: relative;
-    color: white;
-    padding: 90px 10%;
-    text-align: center;
-    border-radius: 18px;
-    margin: 60px 10%;
+
+    min-height: 80vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 80px 20px;
+
+    background:
+    url("https://images.unsplash.com/photo-1503676260728-1c00da094a0b")
+    center center/cover no-repeat;
+
     overflow: hidden;
 }
 
-/* IMAGE BACKGROUND */
-.home-quiz-section::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f") center/cover no-repeat;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    transform: scale(1.05);
-}
-
 /* DARK OVERLAY */
-.home-quiz-section::after {
-    content: "";
+.quiz-overlay{
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
+    inset: 0;
+
+    background:
+    linear-gradient(
         135deg,
-        rgba(164, 53, 240, 0.85),
-        rgba(0, 0, 0, 0.75)
+        rgba(0,0,0,0.85),
+        rgba(10,10,10,0.75)
     );
-    top: 0;
-    left: 0;
-    z-index: 2;
 }
 
-/* CONTENT AU-DESSUS */
-.home-quiz-section > * {
+/* CONTENT */
+.quiz-content{
     position: relative;
-    z-index: 3;
+    z-index: 2;
+
+    max-width: 750px;
+
+    text-align: center;
+
+    padding: 40px;
+
+    border-radius: 30px;
+
+    background: rgba(255,255,255,0.06);
+
+    backdrop-filter: blur(15px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* TOP BADGE */
+.quiz-badge-top{
+    display: inline-block;
+
+    padding: 10px 20px;
+
+    border-radius: 40px;
+
+    background: rgba(255,255,255,0.1);
+
+    color: #ffcc00;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
 }
 
 /* TITLE */
-.home-quiz-section h2 {
-    font-size: 2.4rem;
-    margin-bottom: 15px;
+.quiz-content h2{
+    font-size: 2.8rem;
+    color: white;
+    margin-bottom: 20px;
+    line-height: 1.3;
 }
 
-/* BADGE */
-.home-quiz-badge {
-    background: rgba(255,255,255,0.15);
+/* TOP SCORE */
+.home-quiz-badge{
     display: inline-block;
-    padding: 10px 20px;
-    border-radius: 25px;
-    margin-bottom: 20px;
-    backdrop-filter: blur(10px);
+
+    margin: 20px 0;
+
+    padding: 12px 22px;
+
+    border-radius: 40px;
+
+    background: rgba(164,53,240,0.15);
+
+    color: #fff;
+
     font-weight: bold;
+
+    border: 1px solid rgba(164,53,240,0.4);
+}
+
+.home-quiz-badge span{
+    color: #ffcc00;
 }
 
 /* TEXT */
-.quiz-text {
-    font-size: 1rem;
-    opacity: 0.9;
+.quiz-text{
+    color: #ddd;
+    font-size: 1.05rem;
+    line-height: 1.7;
+
     margin-bottom: 10px;
 }
 
-/* BUTTON QUIZ */
-.btn-home-quiz {
-    display: inline-block;
-    margin-top: 20px;
-    background: white;
-    color: hsl(0, 0%, 1%);
-    padding: 12px 25px;
-    border-radius: 8px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.btn-home-quiz:hover {
-    transform: translateY(-4px);
-    background: #f2f2f2;
-}
-
-/* CTA SECTION */
-.cta-quiz {
-    text-align: center;
-    padding: 70px 10%;
-    background: #f7f9fa;
-}
-
-.cta-quiz p {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* CTA BUTTON */
-.btn-cta {
-    background: hsl(39, 86%, 57%);
-    color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.btn-cta:hover {
-    background: #ececec;
-}   
-
-
-/* ===== GLOBAL ===== */
-body { background: #fff; font-family: 'Segoe UI', sans-serif; margin:0; padding:0; }
-.container { max-width: 1100px; margin: auto; padding: 40px 20px; text-align: center; }
-
-
-
-/* ===== SECTION AVEC IMAGE BACKGROUND ===== */
-#courses {
-    position: relative;
-    padding: 90px 10%;
-    overflow: hidden;
-}
-
-/* IMAGE BACKGROUND */
-#courses::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f") center/cover no-repeat;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    transform: scale(1.05);
-    
-}
-
-/* DARK OVERLAY */
-#courses::after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        135deg,
-        rgba(0,0,0,0.85),
-        rgba(0,0,0,0.6)
-    );
-    top: 0;
-    left: 0;
-    z-index: 2;
-}
-
-/* CONTENT AU-DESSUS */
-#courses h2,
-.courses {
-    position: relative;
-    z-index: 3;
-}
-
-/* TITRE PLUS PRO */
-#courses h2 {
-    text-align: center;
-    font-size: 2.4rem;
-    margin-bottom: 40px;
-    color: white;
-}
-
-/* ===== GRID RESTE IDENTIQUE ===== */
-.courses {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 25px;
-}
-
-/* ===== CARD GLASS EFFECT ===== */
-.card {
-    background: rgba(255,255,255,0.08);
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    position: relative;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-
-/* HOVER PREMIUM */
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-}
-
-/* IMAGE */
-.course-image {
-    width: 100%;
-    height: 170px;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-/* IMAGE ZOOM */
-.card:hover .course-image {
-    transform: scale(1.08);
-}
-
-/* TITLE */
-.card h3 {
-    font-size: 1.1rem;
-    padding: 15px 15px 5px;
-    color: white;
-}
-
-/* PRICE */
-.price {
-    padding: 0 15px;
-    color: #ffcc00;
-    font-weight: bold;
-}
-
-/* DESCRIPTION */
-.desc {
-    padding: 0 15px 15px;
-    color: #ddd;
-    font-size: 0.9rem;
-}
-
 /* BUTTON */
-.btn {
-    display: block;
-    margin: 15px;
-    text-align: center;
-    background: #000000;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
-}
+.btn-home-quiz{
+    display: inline-block;
 
-.btn:hover {
-    background: hsl(0, 0%, 23%);
-    transform: scale(1.03);
-}
+    margin-top: 25px;
 
-/* BADGES */
-.badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #ff3b30;
+    padding: 16px 40px;
+
+    border-radius: 50px;
+
+    background:
+    linear-gradient(135deg,#a435f0,#8710d8);
+
     color: white;
-    padding: 5px 10px;
-    font-size: 0.75rem;
-    border-radius: 6px;
+
     font-weight: bold;
+
+    text-decoration: none;
+
+    transition: 0.4s;
+
+    box-shadow: 0 10px 30px rgba(164,53,240,0.4);
+}
+
+.btn-home-quiz:hover{
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(164,53,240,0.6);
+}
+
+/* NO QUIZ */
+.no-quiz{
+    color: #aaa;
+    margin-top: 20px;
 }
 
 /* RESPONSIVE */
-@media (max-width: 768px) {
-    #courses {
-        padding: 60px 5%;
+@media(max-width:768px){
+
+    .quiz-content h2{
+        font-size: 2rem;
     }
 
-    .courses {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    .quiz-content{
+        padding: 30px 20px;
+    }
+
+}
+
+
+
+
+/* =========================
+   CTA SECTION
+========================= */
+
+.cta-quiz{
+    margin-top:100px;
+    padding:100px 8%;
+    text-align:center;
+    background:linear-gradient(
+        135deg,
+        #141923,
+        #1d2330
+    );
+}
+
+.cta-quiz h2{
+    font-size:3rem;
+    margin-bottom:20px;
+}
+
+.cta-quiz p{
+    max-width:700px;
+    margin:auto;
+    line-height:1.8;
+    color:#bbb;
+    margin-bottom:35px;
+}
+
+/* CTA BUTTON */
+
+.btn-cta{
+    display:inline-block;
+    padding:16px 35px;
+    background:linear-gradient(
+        135deg,
+        #ffb703,
+        #ff8800
+    );
+    color:white;
+    border-radius:50px;
+    text-decoration:none;
+    font-weight:700;
+    transition:0.4s;
+}
+
+.btn-cta:hover{
+    transform:translateY(-5px);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:992px){
+
+    .home-quiz-section h2{
+        font-size:2.7rem;
+    }
+
+    #courses h2{
+        font-size:2.5rem;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .home-quiz-section{
+        padding:90px 7%;
+    }
+
+    .home-quiz-section h2{
+        font-size:2rem;
+    }
+
+    .quiz-text{
+        font-size:0.95rem;
+    }
+
+    .courses{
+        grid-template-columns:1fr;
+    }
+
+    .course-image{
+        height:210px;
+    }
+
+    #courses h2{
+        font-size:2rem;
+    }
+
+    .cta-quiz h2{
+        font-size:2rem;
+    }
+
+}
+
+
+
+
+/* =========================
+   CTA ULTRA MODERNE
+========================= */
+
+.cta-quiz{
+    position: relative;
+    overflow: hidden;
+
+    min-height: 85vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background:
+    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3")
+    center center/cover no-repeat;
+}
+
+/* DARK OVERLAY */
+.cta-overlay{
+    position: absolute;
+    inset: 0;
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(0,0,0,0.88),
+        rgba(10,10,10,0.75)
+    );
+
+    z-index: 1;
+}
+
+/* CONTENT */
+.cta-content{
+    position: relative;
+    z-index: 2;
+
+    max-width: 850px;
+}
+
+/* BADGE */
+.cta-badge{
+    display: inline-block;
+
+    background: rgba(255,255,255,0.08);
+
+    color: #ffb300;
+
+    padding: 10px 20px;
+
+    border-radius: 40px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    backdrop-filter: blur(12px);
+
+    margin-bottom: 25px;
+
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* TITLE */
+.cta-content h2{
+    font-size: 4rem;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    font-weight: 800;
+}
+
+.cta-content h2 span{
+    background: linear-gradient(
+        90deg,
+        #ff8800,
+        #ffcc00
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* TEXT */
+.cta-content p{
+    color: #ddd;
+    font-size: 1.15rem;
+    line-height: 1.9;
+
+    margin-bottom: 40px;
+}
+
+/* BUTTONS */
+.cta-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* PRIMARY */
+.btn-cta-primary{
+    background:
+    linear-gradient(
+        135deg,
+        #ff8800,
+        #ffb300
+    );
+
+    color: white;
+    text-decoration: none;
+
+    padding: 18px 38px;
+
+    border-radius: 50px;
+
+    font-weight: bold;
+    font-size: 1rem;
+
+    transition: 0.4s;
+
+    box-shadow:
+    0 10px 30px rgba(255,136,0,0.4);
+}
+
+.btn-cta-primary:hover{
+    transform: translateY(-6px) scale(1.03);
+
+    box-shadow:
+    0 15px 40px rgba(255,136,0,0.5);
+}
+
+/* SECONDARY */
+.btn-cta-secondary{
+    border: 2px solid rgba(255,255,255,0.25);
+
+    color: white;
+    text-decoration: none;
+
+    padding: 18px 38px;
+
+    border-radius: 50px;
+
+    font-weight: 600;
+
+    transition: 0.4s;
+
+    backdrop-filter: blur(10px);
+}
+
+.btn-cta-secondary:hover{
+    background: rgba(255,255,255,0.08);
+    transform: translateY(-5px);
+}
+
+/* STATS */
+.cta-stats{
+    margin-top: 60px;
+
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+/* BOX */
+.stat-box{
+    min-width: 160px;
+
+    padding: 25px 20px;
+
+    border-radius: 25px;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(15px);
+
+    border:
+    1px solid rgba(255,255,255,0.08);
+
+    transition: 0.4s;
+}
+
+.stat-box:hover{
+    transform: translateY(-8px);
+
+    background:
+    rgba(255,255,255,0.12);
+}
+
+.stat-box h3{
+    color: #ffb300;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.stat-box span{
+    color: #ddd;
+    font-size: 0.95rem;
+}
+
+/* RESPONSIVE */
+@media(max-width:991px){
+
+    .cta-content h2{
+        font-size: 3rem;
+    }
+
+}
+
+@media(max-width:768px){
+
+    .cta-quiz{
+        min-height: auto;
+        padding: 90px 20px;
+    }
+
+    .cta-content h2{
+        font-size: 2.3rem;
+    }
+
+    .cta-content p{
+        font-size: 1rem;
+    }
+
+    .btn-cta-primary,
+    .btn-cta-secondary{
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .cta-stats{
+        gap: 15px;
+    }
+
+    .stat-box{
+        width: 100%;
+        max-width: 250px;
+    }
+
+}
+
+
+
+
+
+/* SECTION */
+.courses-section{
+    padding: 80px 8%;
+    background: #f7f8fc;
+}
+
+.section-header{
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2{
+    font-size: 34px;
+    color: #1c1d1f;
+    font-weight: 800;
+}
+
+.subtitle{
+    color: #777;
+    margin-top: 8px;
+}
+
+/* GRID */
+.courses-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 25px;
+}
+
+/* CARD */
+.course-card{
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: 0.3s;
+}
+
+.course-card:hover{
+    transform: translateY(-6px);
+}
+
+/* IMAGE */
+.course-image-box{
+    position: relative;
+}
+
+.course-image{
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+}
+
+/* FAVORITE */
+.favorite{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* BADGE */
+.badge{
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: #ff6600;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* PLAY BUTTON */
+.play-button{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 55px;
+    height: 55px;
+    background: rgba(255,102,0,0.95);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.play-button:hover{
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* CONTENT */
+.course-content{
+    padding: 18px;
+    background: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f") center/cover no-repeat;
+    
+}
+
+.course-content h3{
+    font-size: 22px;
+    color: #ff0000;
+    margin-bottom: 5px;
+}
+
+.price{
+    color: #ff6600;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.desc{
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ORIENTATION */
+.orientation{
+    margin-top: 12px;
+    font-size: 13px;
+    color: #ffffff;
+   
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    .courses-section{
+        padding: 50px 5%;
+    }
+
+    .section-header h2{
+        font-size: 26px;
     }
 }
+
 </style>
 
 <script>
