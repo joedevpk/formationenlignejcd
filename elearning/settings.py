@@ -179,4 +179,4 @@ CACHES = {
     }
 }
 
-
+print("DATABASE:", os.getenv("DATABASE_URL"))
