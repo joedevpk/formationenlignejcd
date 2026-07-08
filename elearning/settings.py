@@ -126,11 +126,11 @@ USE_I18N = True
 USE_TZ = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://jdcformationenligne.onrender.com"
+    "https://piakojoedev.onrender.com"
 ]
 
 ALLOWED_HOSTS = [
-    "jdcformationenligne.onrender.com",
+    "piakojoedev.onrender.com",
     "localhost",
     "127.0.0.1"
 ]
