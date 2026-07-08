@@ -135,11 +135,11 @@ USE_I18N = True
 USE_TZ = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://piakojoedev.onrender.com"
+    "https://piako_joedev.onrender.com"
 ]
 
 ALLOWED_HOSTS = [
-    "piakojoedev.onrender.com",
+    "piako_joedev.onrender.com",
     "localhost",
     "127.0.0.1"
 ]
