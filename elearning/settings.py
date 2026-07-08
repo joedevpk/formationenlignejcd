@@ -11,6 +11,8 @@ import cloudinary
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 # SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-jdcgoatmmajoe20052009")
 DEBUG = os.getenv("DEBUG", "True") == "True"
