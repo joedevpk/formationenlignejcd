@@ -3,7 +3,7 @@ import django
 
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE",
-    "e-learning.settings"
+    "elearning.settings"
 )
 
 django.setup()
