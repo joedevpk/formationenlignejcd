@@ -91,18 +91,25 @@ CHANNEL_LAYERS = {
 
 
 # DATABASE (AUTO SWITCH LOCAL / PRODUCTION)
-if os.getenv("DATABASE_URL"):
+# DATABASE (LOCAL / PRODUCTION)
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
 # PASSWORDS
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -126,11 +133,11 @@ USE_I18N = True
 USE_TZ = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://piakojoedev.onrender.com"
+    "https://jdcformationenligne.onrender.com"
 ]
 
 ALLOWED_HOSTS = [
-    "piakojoedev.onrender.com",
+    "jdcformationenligne.onrender.com",
     "localhost",
     "127.0.0.1"
 ]
